@@ -8,6 +8,6 @@ public class Like
     public DateTime CreatedAt { get; set; }
 
     // Navigation Property
-    public Product Products { get; set; }
+    public Product Product { get; set; }
 }
 

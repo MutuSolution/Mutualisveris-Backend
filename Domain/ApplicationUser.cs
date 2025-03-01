@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace Domain;
 
@@ -11,6 +12,12 @@ public class ApplicationUser : IdentityUser
     public string Role { get; set; } = "Basic";
     public DateTime RefreshTokenExpiryDate { get; set; }
     public bool IsActive { get; set; }
+    public DateTime RegisteredAt { get; set; } = DateTime.UtcNow;
+
+    // Relationships
+    public List<Address> Addresses { get; set; } = new();
+    public List<Order> Orders { get; set; } = new();
+    public Cart Cart { get; set; }
 
 
 }

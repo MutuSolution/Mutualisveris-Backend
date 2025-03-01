@@ -31,7 +31,7 @@ public class ProductService : IProductService
     }
     public async Task<Product> CreateProductAsync(Product product)
     {
-        var productInDb = await _context.Products.FirstOrDefaultAsync(x => x.Url == product.Url);
+        var productInDb = await _context.Products.FirstOrDefaultAsync(x => x.Name == product.Name);
         if (productInDb != null)
         {
             var isReportedProduct = await _context.ProductReports
@@ -64,9 +64,7 @@ public class ProductService : IProductService
             .Where(product => product.Id == id).Select(product => new ProductResponse
             {
                 Id = product.Id,
-                Title = product.Title,
-                Url = product.Url,
-                UserName = product.UserName,
+                Title = product.Name,
                 Description = product.Description,
                 IsPublic = product.IsPublic,
                 IsDeleted = product.IsDeleted,
@@ -86,9 +84,7 @@ public class ProductService : IProductService
         return await _context.Products.Select(product => new ProductResponse
         {
             Id = product.Id,
-            Title = product.Title,
-            Url = product.Url,
-            UserName = product.UserName,
+            Title = product.Name,
             Description = product.Description,
             IsPublic = product.IsPublic,
             IsDeleted = product.IsDeleted,
@@ -112,7 +108,7 @@ public class ProductService : IProductService
             .Where(x =>
             (x.IsPublic == true) &&
             (x.IsDeleted == false) &&
-            (x.UserName.ToLower() == userName.ToLower()))
+            (x.Name.ToLower() == userName.ToLower()))
             .OrderByDescending(x => x.LikeCount)
             .Take(25)
             .ToListAsync();
@@ -125,9 +121,7 @@ public class ProductService : IProductService
             throw new ArgumentException("[ML118] Product not found.");
         }
 
-        product.Title = productResponse.Title;
-        product.Url = productResponse.Url;
-        product.UserName = productResponse.UserName;
+        product.Name = productResponse.Title;
         product.Description = productResponse.Description;
         product.IsPublic = productResponse.IsPublic;
         product.IsDeleted = productResponse.IsDeleted;
@@ -151,9 +145,7 @@ public class ProductService : IProductService
                 (x.IsDeleted == parameters.IsDeleted) &&
                 (string.IsNullOrEmpty(searhTerm) ||
                 // Searching with case-insensitive comparison
-                x.Title.ToLower().Contains(searhTerm.ToLower()) ||
-                x.Url.ToLower().Contains(searhTerm.ToLower()) ||
-                x.UserName.ToLower().Contains(searhTerm.ToLower()) ||
+                x.Name.ToLower().Contains(searhTerm.ToLower()) ||
                 x.Description.ToLower().Contains(searhTerm.ToLower())))
             .SortProduct(parameters.OrderBy);
 
@@ -167,9 +159,7 @@ public class ProductService : IProductService
                  .Select(product => new ProductResponse
                  {
                      Id = product.Id,
-                     Title = product.Title,
-                     Url = product.Url,
-                     UserName = product.UserName,
+                     Title = product.Name,
                      Description = product.Description,
                      IsPublic = product.IsPublic,
                      IsDeleted = product.IsDeleted,
@@ -193,14 +183,12 @@ public class ProductService : IProductService
         (string.IsNullOrEmpty(parameters.IsPublic) ||
         (parameters.IsPublic.ToLower() == "true" && x.IsPublic == true) ||
         (parameters.IsPublic.ToLower() == "false" && x.IsPublic == false)) &&
-        (x.UserName == parameters.UserName) &&
+        (x.Name == parameters.UserName) &&
         (x.LikeCount >= parameters.MinLikeCount) &&
         (x.IsDeleted == parameters.IsDeleted) &&
         (string.IsNullOrEmpty(searhTerm) ||
         // Searching with case-insensitive comparison
-        x.Title.ToLower().Contains(searhTerm.ToLower()) ||
-        x.Url.ToLower().Contains(searhTerm.ToLower()) ||
-        x.UserName.ToLower().Contains(searhTerm.ToLower()) ||
+        x.Name.ToLower().Contains(searhTerm.ToLower()) ||
         x.Description.ToLower().Contains(searhTerm.ToLower())));
 
         query = query.SortProduct(parameters.OrderBy);
@@ -216,9 +204,7 @@ public class ProductService : IProductService
                  .Select(product => new ProductResponse
                  {
                      Id = product.Id,
-                     Title = product.Title,
-                     Url = product.Url,
-                     UserName = product.UserName,
+                     Title = product.Name,
                      Description = product.Description,
                      IsPublic = product.IsPublic,
                      IsDeleted = product.IsDeleted,
@@ -238,7 +224,7 @@ public class ProductService : IProductService
        .Where(x => x.UserName == _currentUserService.UserName).Select(x => x.ProductId).ToHashSet();
         var searhTerm = CleanSearchTerm(parameters.SearchTerm);
 
-        var query = _context.Set<Like>().Include(l => l.Products).AsQueryable()
+        var query = _context.Set<Like>().Include(l => l.Product).AsQueryable()
             .Where(x =>
                 // Filtering
                 (x.UserName == parameters.UserName) &&
@@ -260,14 +246,12 @@ public class ProductService : IProductService
                  .Select(product => new ProductResponse
                  {
                      Id = product.Id,
-                     Title = product.Products.Title,
-                     Url = product.Products.Url,
-                     UserName = product.Products.UserName,
-                     Description = product.Products.Description,
-                     IsPublic = product.Products.IsPublic,
-                     IsDeleted = product.Products.IsDeleted,
-                     LikeCount = product.Products.LikeCount,
-                     IsLiked = likedProductIds.Contains(product.Products.Id)
+                     Title = product.Product.Name,
+                     Description = product.Product.Description,
+                     IsPublic = product.Product.IsPublic,
+                     IsDeleted = product.Product.IsDeleted,
+                     LikeCount = product.Product.LikeCount,
+                     IsLiked = likedProductIds.Contains(product.Product.Id)
                  })
                 .ToListAsync();
 
