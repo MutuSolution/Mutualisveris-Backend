@@ -3,6 +3,7 @@ using Application.Services.Identity;
 using Common.Requests.Identity;
 using Common.Responses;
 using Common.Responses.Wrappers;
+using Domain;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;

@@ -1,9 +1,9 @@
 ﻿using Domain;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Models;
+namespace Domain;
 
-public class ApplicationUser : IdentityUser, IUser
+public class ApplicationUser : IdentityUser
 {
     public string FirstName { get; set; }
     public string LastName { get; set; }

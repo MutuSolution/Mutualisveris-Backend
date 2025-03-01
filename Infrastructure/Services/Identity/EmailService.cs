@@ -3,6 +3,7 @@ using AutoMapper;
 using Common.Requests.Identity;
 using Common.Responses;
 using Common.Responses.Wrappers;
+using Domain;
 using Infrastructure.Models;
 using MailKit.Net.Smtp;
 using MailKit.Security;

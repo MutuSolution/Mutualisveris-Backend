@@ -4,6 +4,7 @@ using Common.Authorization;
 using Common.Requests.Identity;
 using Common.Responses.Identity;
 using Common.Responses.Wrappers;
+using Domain;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;

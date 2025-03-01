@@ -3,6 +3,7 @@ using Application.Services;
 using AspNetCoreRateLimit;
 using Common.Authorization;
 using Common.Responses.Wrappers;
+using Domain;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Infrastructure.Services;

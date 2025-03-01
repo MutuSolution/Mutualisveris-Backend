@@ -1,4 +1,5 @@
-﻿using Infrastructure.Models;
+﻿using Domain;
+using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

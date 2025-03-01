@@ -93,7 +93,7 @@ public class UserService : IUserService
         return await ResponseWrapper<List<UserResponse>>.SuccessAsync(mappedUsers);
     }
 
-    public async Task<PaginationResult<IUser>> GetPagedUsersAsync(UserParameters parameters)
+    public async Task<PaginationResult<ApplicationUser>> GetPagedUsersAsync(UserParameters parameters)
     {
         var query = _userManager.Users.AsQueryable();
 
@@ -123,7 +123,7 @@ public class UserService : IUserService
             .Take(parameters.ItemsPerPage)
             .ToListAsync();
 
-        return new PaginationResult<IUser>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
+        return new PaginationResult<ApplicationUser>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
 
     }
 

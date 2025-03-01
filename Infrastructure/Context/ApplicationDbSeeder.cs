@@ -1,4 +1,5 @@
 ﻿using Common.Authorization;
+using Domain;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

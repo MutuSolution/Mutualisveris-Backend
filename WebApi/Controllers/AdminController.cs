@@ -3,6 +3,7 @@ using AutoMapper;
 using Common.Authorization;
 using Common.Requests.Admin;
 using Common.Responses.Wrappers;
+using Domain;
 using Infrastructure.Context;
 using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;

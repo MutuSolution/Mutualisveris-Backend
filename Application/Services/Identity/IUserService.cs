@@ -3,6 +3,7 @@ using Common.Responses.Identity;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain;
+using Infrastructure.Models;
 
 namespace Application.Services.Identity;
 
@@ -14,7 +15,7 @@ public interface IUserService
     Task<IResponseWrapper<UserResponse>> GetUserByEmailAsync(string email);
     Task<IResponseWrapper<UserResponse>> GetUserByUserNameAsync(string username);
     Task<IResponseWrapper> GetAllUsersAsync();
-    Task<PaginationResult<IUser>> GetPagedUsersAsync(UserParameters parameters);
+    Task<PaginationResult<ApplicationUser>> GetPagedUsersAsync(UserParameters parameters);
     Task<IResponseWrapper> DeleteAsync(DeleteUserByUsernameRequest request);
     Task<IResponseWrapper> UpdateUserAsync(UpdateUserRequest request);
     Task<IResponseWrapper> ChangeUserPasswordAsync(ChangePasswordRequest request);
