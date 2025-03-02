@@ -39,21 +39,6 @@ public class UserRegistrationRequestValidator : AbstractValidator<UserRegistrati
         .GetUserByEmailAsync(email) is not UserResponse existing)
         .WithMessage("[ML6] Email is already taken.");
 
-
-        RuleFor(x => x.UserName)
-        .NotNull().WithMessage("[ML7] Username cannot be null.")
-        .NotEmpty().WithMessage("[ML8] Username cannot be empty.")
-        .MinimumLength(4).WithMessage("[ML9] Username must be at least 4 characters long.")
-        .MaximumLength(20).WithMessage("[ML10] Username cannot exceed 20 characters.")
-        .Matches("^[a-zA-Z0-9_.]*$")
-        .WithMessage("[ML11] Username can only contain letters, numbers, underscores, and periods.")
-        .Must(username => !username.Contains(" ")).WithMessage("[ML12] Username cannot contain spaces.")
-        .Must(username => !forbiddenWords.Any(w => username.Contains(w)))
-        .WithMessage("[ML13] Username contains forbidden words.")
-        .MustAsync(async (username, cancellation) => await userService
-        .GetUserByUserNameAsync(username) is not UserResponse existing)
-        .WithMessage("[ML14] Username is already taken.");
-
         RuleFor(x => x.FirstName)
             .NotEmpty()
             .MaximumLength(200);

@@ -8,7 +8,6 @@ using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -189,18 +188,18 @@ public class UserService : IUserService
     public async Task<IResponseWrapper> RegisterUserAsync(UserRegistrationRequest request)
     {
         var userWithEmailInDb = await _userManager.FindByEmailAsync(request.Email);
-        if (userWithEmailInDb is not null) await ResponseWrapper.FailAsync("[ML63] Email already taken.");
+        if (userWithEmailInDb is not null)
+            await ResponseWrapper.FailAsync("[ML63] Email already taken.");
 
-        var userWithUserNameInDb = await _userManager.FindByNameAsync(request.UserName);
-        if (userWithUserNameInDb is not null)
-            await ResponseWrapper.FailAsync("[ML64] Username already taken.");
+        if (request.Password != request.ConfirmPassword)
+            await ResponseWrapper.FailAsync("[ML200] password must be equal.");
+
 
         var newUser = new ApplicationUser
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            UserName = request.UserName,
             IsActive = true,
             Role = "Basic",
             EmailConfirmed = false
@@ -231,16 +230,11 @@ public class UserService : IUserService
         var userWithEmailInDb = await _userManager.FindByEmailAsync(request.Email);
         if (userWithEmailInDb is not null) await ResponseWrapper.FailAsync("[ML63] Email already taken.");
 
-        var userWithUserNameInDb = await _userManager.FindByNameAsync(request.UserName);
-        if (userWithUserNameInDb is not null)
-            await ResponseWrapper.FailAsync("[ML64] Username already taken.");
-
         var newUser = new ApplicationUser
         {
             FirstName = request.FirstName,
             LastName = request.LastName,
             Email = request.Email,
-            UserName = request.UserName,
             IsActive = true,
             EmailConfirmed = true
         };

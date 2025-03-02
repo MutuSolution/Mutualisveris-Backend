@@ -1,11 +1,12 @@
-﻿using Application.Services.Identity;
+﻿using Application.Pipelines;
+using Application.Services.Identity;
 using Common.Requests.Identity;
 using Common.Responses.Wrappers;
 using MediatR;
 
 namespace Application.Features.Identity.Token.Queries;
 
-public class GetTokenQuery : IRequest<IResponseWrapper>
+public class GetTokenQuery : IRequest<IResponseWrapper>, IValidateMe
 {
     public TokenRequest TokenRequest { get; set; }
 }

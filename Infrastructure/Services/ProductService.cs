@@ -315,7 +315,7 @@ public class ProductService : IProductService
         }).ToList();
     }
 
-   
+
 
     public string CleanSearchTerm(string searchTerm)
     {

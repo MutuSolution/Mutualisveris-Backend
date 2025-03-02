@@ -4,7 +4,6 @@ using Common.Requests.Identity;
 using Common.Responses;
 using Common.Responses.Wrappers;
 using Domain;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -31,14 +30,13 @@ public class TokenService : ITokenService
 
     public async Task<ResponseWrapper<TokenResponse>> GetTokenAsync(TokenRequest tokenRequest)
     {
-        if (tokenRequest.Email is null && tokenRequest.UserName is null)
+        if (tokenRequest.Email is null)
         {
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML95] Email or Username must not be null.");
+            return await ResponseWrapper<TokenResponse>
+                .FailAsync("[ML95] Email must not be null.");
         }
 
-        var user = tokenRequest.Email is not null
-            ? await _userManager.FindByEmailAsync(tokenRequest.Email)
-            : await _userManager.FindByNameAsync(tokenRequest.UserName);
+        var user = await _userManager.FindByEmailAsync(tokenRequest.Email);
 
         if (user is null)
         {

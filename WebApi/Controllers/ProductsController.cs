@@ -4,7 +4,6 @@ using Common.Authorization;
 using Common.Requests.Products;
 using Common.Responses.Pagination;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WebApi.Attributes;
 
 namespace WebApi.Controllers;

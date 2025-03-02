@@ -1,6 +1,4 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Identity;
-using System.Net;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Domain;
 

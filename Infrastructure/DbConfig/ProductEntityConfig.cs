@@ -79,7 +79,7 @@ internal class ProductEntityConfig : IEntityTypeConfiguration<Product>
             .IsRequired(false);
 
         // Soft Delete Filtresi
-       // builder.HasQueryFilter(p => !p.IsDeleted);
+        // builder.HasQueryFilter(p => !p.IsDeleted);
 
     }
 }

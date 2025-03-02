@@ -5,7 +5,6 @@ using Common.Requests.Admin;
 using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

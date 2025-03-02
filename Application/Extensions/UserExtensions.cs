@@ -1,5 +1,4 @@
 ﻿using Domain;
-using Infrastructure.Models;
 using System.Linq.Dynamic.Core;
 
 namespace Application.Extensions;

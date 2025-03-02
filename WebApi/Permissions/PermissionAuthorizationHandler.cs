@@ -1,7 +1,5 @@
 ﻿using Common.Authorization;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApi.Permissions;
 

@@ -1,33 +1,23 @@
 ﻿using Application.AppConfigs;
-using Application.Services;
 using AspNetCoreRateLimit;
 using Common.Authorization;
 using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
-using Infrastructure.Models;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using WebApi.Permissions;
 
 namespace WebApi
@@ -177,7 +167,8 @@ namespace WebApi
                             {
                                 context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                                 context.Response.ContentType = "application/json";
-                                var result = JsonConvert.SerializeObject(ResponseWrapper.Fail("[ML77] You are not Authorized."));
+                                var result = JsonConvert
+                                .SerializeObject(ResponseWrapper.Fail("[ML77] You are not Authorized."));
                                 return context.Response.WriteAsync(result);
                             }
 

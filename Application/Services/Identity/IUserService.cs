@@ -3,7 +3,6 @@ using Common.Responses.Identity;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain;
-using Infrastructure.Models;
 
 namespace Application.Services.Identity;
 
