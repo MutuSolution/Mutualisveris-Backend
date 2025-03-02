@@ -21,27 +21,27 @@ public class AppPermissions
             new(AppFeature.Users, AppAction.Read, AppRoleGroup.SystemAccess, "Read Users", IsBasic: true),
             new(AppFeature.Users, AppAction.Delete, AppRoleGroup.SystemAccess, "Delete Users"),
 
-            new(AppFeature.UserRoles, AppAction.Read, AppRoleGroup.SystemAccess, "Read User Roles"),
+            new(AppFeature.UserRoles, AppAction.Read, AppRoleGroup.SystemAccess, "Read User Roles", IsBasic: true),
             new(AppFeature.UserRoles, AppAction.Update, AppRoleGroup.SystemAccess, "Update User Roles"),
 
-            new(AppFeature.Roles, AppAction.Read, AppRoleGroup.SystemAccess, "Read Roles"),
+            new(AppFeature.Roles, AppAction.Read, AppRoleGroup.SystemAccess, "Read Roles", IsBasic: true),
             new(AppFeature.Roles, AppAction.Create, AppRoleGroup.SystemAccess, "Create Roles"),
             new(AppFeature.Roles, AppAction.Update, AppRoleGroup.SystemAccess, "Update Roles"),
             new(AppFeature.Roles, AppAction.Delete, AppRoleGroup.SystemAccess, "Delete Roles"),
 
             new(AppFeature.RoleClaims, AppAction.Read, AppRoleGroup.SystemAccess,
-                "Read Role Claims/Permissions"),
+                "Read Role Claims/Permissions", IsBasic: true),
             new(AppFeature.RoleClaims, AppAction.Update, AppRoleGroup.SystemAccess,
                 "Update Role Claims/Permissions"),
 
             new(AppFeature.Products, AppAction.Read, AppRoleGroup.ManagementHierarchy,
                 "Read Products", IsBasic: true),
             new(AppFeature.Products, AppAction.Create, AppRoleGroup.ManagementHierarchy,
-                "Create Products", IsBasic: true),
+                "Create Products"),
             new(AppFeature.Products, AppAction.Update, AppRoleGroup.ManagementHierarchy,
-                "Update Products", IsBasic: true),
+                "Update Products"),
             new(AppFeature.Products, AppAction.Delete, AppRoleGroup.ManagementHierarchy,
-                "Delete Products", IsBasic: true)
+                "Delete Products")
     };
 
     public static IReadOnlyList<AppPermission> AdminPermissions { get; } =

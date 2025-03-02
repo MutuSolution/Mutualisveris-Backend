@@ -194,6 +194,7 @@ public class UserService : IUserService
         if (request.Password != request.ConfirmPassword)
             await ResponseWrapper.FailAsync("[ML200] password must be equal.");
 
+        var username = request.Email.Split('@')[0];
 
         var newUser = new ApplicationUser
         {
@@ -201,9 +202,11 @@ public class UserService : IUserService
             LastName = request.LastName,
             Email = request.Email,
             IsActive = true,
+            UserName = username,
             Role = "Basic",
             EmailConfirmed = false
         };
+        ;
         var password = new PasswordHasher<ApplicationUser>();
         newUser.PasswordHash = password.HashPassword(newUser, request.Password);
 
