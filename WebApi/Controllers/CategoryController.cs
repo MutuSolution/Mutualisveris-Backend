@@ -1,4 +1,5 @@
-﻿using Application.Features.Products.Commands;
+﻿using Application.Features.Categories.Commands;
+using Application.Features.Products.Commands;
 using Common.Authorization;
 using Common.Request.Category;
 using Common.Requests.Products;
@@ -14,9 +15,9 @@ public class CategoryController : MyBaseController<CategoryController>
     [MustHavePermission(AppFeature.Categories, AppAction.Create)]
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest request)
     {
-        //var response = await MediatorSender
-        //    .Send(new CreateProductCommand { CreateProductRequest = createProduct });
-        //if (response.IsSuccessful) return Ok(response);
-        return BadRequest(/*response*/);
+        var response = await MediatorSender
+            .Send(new CreateCategoryCommand { Request =  request });
+        if (response.IsSuccessful) return Ok(response);
+        return BadRequest(response);
     }
 }

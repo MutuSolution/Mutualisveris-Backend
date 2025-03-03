@@ -27,6 +27,7 @@ builder.Services.AddJwtAuthentication(
 // Identity, Infrastructure vb. kayýtlar
 builder.Services.AddIdentityServices();
 builder.Services.AddProductService();
+builder.Services.AddCategoryService();
 builder.Services.AddInfrastructureDependencies();
 builder.Services.AddEmailService();
 

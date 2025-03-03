@@ -2,7 +2,10 @@
 using Application.Services;
 using AutoMapper;
 using Common.Request.Category;
+using Common.Responses.Products;
 using Common.Responses.Wrappers;
+using Domain;
+using Domain.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,8 +30,17 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
         _mapper = mapper;
     }
 
-    public Task<IResponseWrapper> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    public async Task<IResponseWrapper> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var mappedCategory = _mapper.Map<Category>(request.Request);
+        var newCategory = await _categoryService.CreateCategoryAsync(mappedCategory);
+        if (newCategory.Id > 0)
+        {
+            var mappedNewCategory = _mapper.Map<CategoryResponse>(newCategory);
+            return await ResponseWrapper<CategoryResponse>
+                .SuccessAsync(mappedNewCategory, "[ML18] Category created successfully.");
+        }
+        return await ResponseWrapper<string>.FailAsync("[ML19] Failed to create category entry.");
+
     }
 }

@@ -38,7 +38,12 @@ public static class ServiceCollectionExtensions
             .AddTransient<IProductService, ProductService>();
         return services;
     }
-
+    public static IServiceCollection AddCategoryService(this IServiceCollection services)
+    {
+        services
+            .AddTransient<ICategoryService, CategoryService>();
+        return services;
+    }
     public static IServiceCollection AddEmailService(this IServiceCollection services)
     {
         services

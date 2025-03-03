@@ -6,9 +6,8 @@ public class Category
     public string Name { get; set; }
     public string Description { get; set; }
     public int? ParentCategoryId { get; set; } // Hiyerarşik kategori
-
-    // Relationships
-    public Category ParentCategory { get; set; }
-    public List<Category> SubCategories { get; set; } = new();
-    public List<Product> Products { get; set; } = new();
+    public bool isVisible { get; set; }
+    public virtual Category ParentCategory { get; set; }
+    public virtual ICollection<Category> SubCategories { get; set; } = new List<Category>();
+    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 }

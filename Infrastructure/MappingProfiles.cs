@@ -15,5 +15,6 @@ internal class MappingProfiles : Profile
         CreateMap<Product, LikeResponse>();
         CreateMap<ProductReport, ProductReportResponse>().ReverseMap();
         CreateMap<ApplicationRoleClaim, RoleClaimViewModel>().ReverseMap();
+        CreateMap<Product, ProductResponse>().ReverseMap();
     }
 }

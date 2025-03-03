@@ -7,6 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\Categories\Queries\**" />
+    <Compile Remove="Features\Categories\Validators\**" />
+    <EmbeddedResource Remove="Features\Categories\Queries\**" />
+    <EmbeddedResource Remove="Features\Categories\Validators\**" />
+    <None Remove="Features\Categories\Queries\**" />
+    <None Remove="Features\Categories\Validators\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
