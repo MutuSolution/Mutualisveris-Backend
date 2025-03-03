@@ -10,96 +10,120 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace Infrastructure.Services.Identity;
-
-public class EmailService : IEmailService
+namespace Infrastructure.Services.Identity
 {
-    private readonly IConfiguration _configuration;
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IMapper _mapper;
-
-    public EmailService(IConfiguration configuration,
-        UserManager<ApplicationUser> userManager,
-        IMapper mapper)
+    public class EmailService : IEmailService
     {
-        _configuration = configuration;
-        _userManager = userManager;
-        _mapper = mapper;
-    }
+        private readonly IConfiguration _configuration;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
+        // Opsiyonel: ILogger<EmailService> _logger; // Hata loglama için
 
-    // The code appears to be mostly correct, but there are a few improvements and error handling that can be added:
-
-    public async Task<ResponseWrapper> SendEmailConfirmAsync(SendEmailConfirmRequest request)
-    {
-        if (request.Email is null)
-            return (ResponseWrapper)await ResponseWrapper.FailAsync("[ML91] Email required.");
-
-        var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user is null)
-            return (ResponseWrapper)await ResponseWrapper.FailAsync("[ML92] User does not exist.");
-
-        if (user.EmailConfirmed)
-            return (ResponseWrapper)await ResponseWrapper.FailAsync("[ML93] User already confirmed.");
-
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-
-        var email = new MimeMessage();
-        email.From.Add(MailboxAddress.Parse("confirm@mutuapp.com"));
-        email.To.Add(MailboxAddress.Parse(request.Email));
-        email.Subject = $"Mutuapp confirm code: {code}";
-        email.Body = new BodyBuilder
+        public EmailService(IConfiguration configuration,
+            UserManager<ApplicationUser> userManager,
+            IMapper mapper)
         {
-            HtmlBody = $"<p>Welcome to Mutuapp, that is your confirmation code: <b>{code}</b></p>",
-            TextBody = $"Welcome to Mutuapp, your confirmation code is: {code}"
-        }.ToMessageBody();
-
-        using var client = new SmtpClient();
-        try
-        {
-            // Bağlantı
-            await client.ConnectAsync(_configuration.GetSection("Emailhost").Value, 465, SecureSocketOptions.SslOnConnect);
-
-            // Doğrulama
-            await client.AuthenticateAsync(
-                _configuration.GetSection("EmailUserName").Value,
-                _configuration.GetSection("EmailPassword").Value
-            );
-
-            // E-posta gönderimi
-            await client.SendAsync(email);
-        }
-        catch (Exception ex)
-        {
-            // Loglama ve hata iletimi
-            // Log ex.Message ile kaydedilebilir
-            return (ResponseWrapper)await ResponseWrapper
-                .FailAsync($"[ML90] Email sending failed: {ex.Message}");
-        }
-        finally
-        {
-            // Bağlantıyı kes ve kaynağı temizle
-            await client.DisconnectAsync(true);
+            _configuration = configuration;
+            _userManager = userManager;
+            _mapper = mapper;
         }
 
-        return await ResponseWrapper<string>.SuccessAsync("[ML94] Verification code has been sent.");
-    }
+        public async Task<ResponseWrapper> SendEmailConfirmAsync(SendEmailConfirmRequest request)
+        {
+            // Email alanı kontrolü: null, boş veya sadece boşluk karakterleri kontrol ediliyor.
+            if (string.IsNullOrWhiteSpace(request.Email))
+                return (ResponseWrapper)await
+                    ResponseWrapper.FailAsync("[ML91] Email required.");
 
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            if (user is null)
+                return (ResponseWrapper)await
+                    ResponseWrapper.FailAsync("[ML92] User does not exist.");
 
-    public async Task<IResponseWrapper> GetEmailConfirmAsync(EmailConfirmRequest emailConfirmRequest)
-    {
-        if (emailConfirmRequest.Code is null)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML85] Code required.");
-        if (emailConfirmRequest.Email is null)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML86] Email required.");
+            if (user.EmailConfirmed)
+                return (ResponseWrapper)await
+                    ResponseWrapper.FailAsync("[ML93] User already confirmed.");
 
-        var user = await _userManager.FindByEmailAsync(emailConfirmRequest.Email);
-        if (user is null)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML87] User not found.");
+            // Email onay token'ı oluşturuluyor.
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            // (Opsiyonel) Token'ı URL dostu hale getirmek için encode edebilirsiniz.
 
-        var isVerified = await _userManager.ConfirmEmailAsync(user, emailConfirmRequest.Code);
-        if (!isVerified.Succeeded)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML88] Email not confirmed.");
+            var emailMessage = CreateEmailMessage(request.Email, token);
 
-        return await ResponseWrapper<TokenResponse>.SuccessAsync("[ML89] Email confirmed.");
+            using var client = new SmtpClient();
+            try
+            {
+                // Konfigürasyon üzerinden değerler okunuyor.
+                var host = _configuration["EmailHost"];
+                var portString = _configuration["EmailPort"];
+                if (!int.TryParse(portString, out int port))
+                {
+                    port = 465; // Varsayılan port
+                }
+                var emailUserName = _configuration["EmailUserName"];
+                var emailPassword = _configuration["EmailPassword"];
+
+                // Sunucuya bağlanma (SSL ile)
+                await client.ConnectAsync(host, port, SecureSocketOptions.SslOnConnect);
+
+                // Kimlik doğrulama
+                await client.AuthenticateAsync(emailUserName, emailPassword);
+
+                // E-posta gönderimi
+                await client.SendAsync(emailMessage);
+            }
+            catch (Exception ex)
+            {
+                // Hata loglama yapılabilir: _logger.LogError(ex, "Email gönderim hatası");
+                return (ResponseWrapper)await ResponseWrapper
+                    .FailAsync($"[ML90] Email sending failed: {ex.Message}");
+            }
+            finally
+            {
+                await client.DisconnectAsync(true);
+            }
+
+            return await ResponseWrapper<string>.SuccessAsync("[ML94] Verification code has been sent.");
+        }
+
+        // Email mesajı oluşturma işlemi ayrı metodda toplanarak kod tekrarı azaltıldı.
+        private MimeMessage CreateEmailMessage(string recipientEmail, string token)
+        {
+            var message = new MimeMessage();
+
+            // Gönderici adresi konfigürasyon üzerinden alınabilir. (Varsayılan değeri belirleniyor.)
+            var fromAddress = _configuration["EmailFromAddress"] ?? "confirm@mutuapp.com";
+
+            message.From.Add(MailboxAddress.Parse(fromAddress));
+            message.To.Add(MailboxAddress.Parse(recipientEmail));
+            message.Subject = "Mutualisveris Email Confirmation";
+
+            var bodyBuilder = new BodyBuilder
+            {
+                HtmlBody = $"<p>Welcome to Mutualisveris, your confirmation code is: <strong>{token}</strong></p>",
+                TextBody = $"Welcome to Mutualisveris, your confirmation code is: {token}"
+            };
+
+            message.Body = bodyBuilder.ToMessageBody();
+            return message;
+        }
+
+        public async Task<IResponseWrapper> GetEmailConfirmAsync(EmailConfirmRequest emailConfirmRequest)
+        {
+            if (string.IsNullOrWhiteSpace(emailConfirmRequest.Code))
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML85] Code required.");
+            if (string.IsNullOrWhiteSpace(emailConfirmRequest.Email))
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML86] Email required.");
+
+            var user = await _userManager.FindByEmailAsync(emailConfirmRequest.Email);
+            if (user is null)
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML87] User not found.");
+
+            var confirmationResult = await _userManager.ConfirmEmailAsync(user, emailConfirmRequest.Code);
+            if (!confirmationResult.Succeeded)
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML88] Email not confirmed.");
+
+            return await ResponseWrapper<TokenResponse>.SuccessAsync("[ML89] Email confirmed.");
+        }
     }
 }
