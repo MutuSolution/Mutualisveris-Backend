@@ -2,6 +2,6 @@
 
 public static class AppCredentials
 {
-    public const string Password = "12345678";
+    public const string Password = "108484Yg.//";
     public const string Email = "yunus@mail.com";
 }

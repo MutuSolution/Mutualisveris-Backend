@@ -147,7 +147,7 @@ public class ProductService : IProductService
                 // Searching with case-insensitive comparison
                 x.Name.ToLower().Contains(searhTerm.ToLower()) ||
                 x.Description.ToLower().Contains(searhTerm.ToLower())))
-            .SortProduct(parameters.OrderBy);
+            .SortById(parameters.OrderBy);
 
         var totalCount = await query.CountAsync();
         var totalPage = totalCount > 0 ? (int)Math.Ceiling((double)totalCount / parameters.ItemsPerPage) : 0;
@@ -191,7 +191,7 @@ public class ProductService : IProductService
         x.Name.ToLower().Contains(searhTerm.ToLower()) ||
         x.Description.ToLower().Contains(searhTerm.ToLower())));
 
-        query = query.SortProduct(parameters.OrderBy);
+        query = query.SortById(parameters.OrderBy);
 
         var totalCount = await query.CountAsync();
         var totalPage = totalCount > 0 ?
@@ -233,7 +233,7 @@ public class ProductService : IProductService
                 x.UserName.ToLower().Contains(searhTerm.ToLower())
               ));
 
-        query = query.SortLike(parameters.OrderBy);
+        query = query.SortById(parameters.OrderBy);
 
         var totalCount = await query.CountAsync();
         var totalPage = totalCount > 0 ?

@@ -41,12 +41,22 @@ public class AppPermissions
             new(AppFeature.Products, AppAction.Update, AppRoleGroup.ManagementHierarchy,
                 "Update Products"),
             new(AppFeature.Products, AppAction.Delete, AppRoleGroup.ManagementHierarchy,
-                "Delete Products")
+                "Delete Products"),
+
+        new(AppFeature.Categories, AppAction.Read, AppRoleGroup.ManagementHierarchy,
+                "Read Categories", IsBasic: true),
+            new(AppFeature.Categories, AppAction.Create, AppRoleGroup.ManagementHierarchy,
+                "Create Categories"),
+            new(AppFeature.Categories, AppAction.Update, AppRoleGroup.ManagementHierarchy,
+                "Update Categories"),
+            new(AppFeature.Categories, AppAction.Delete, AppRoleGroup.ManagementHierarchy,
+                "Delete Categories")
     };
 
     public static IReadOnlyList<AppPermission> AdminPermissions { get; } =
        new ReadOnlyCollection<AppPermission>(_all).ToArray();
-    //  new ReadOnlyCollection<AppPermission>(_all.Where(p => !p.IsBasic).ToArray()); //YG!
+    //  isbasic olmayan admin
+    //  new ReadOnlyCollection<AppPermission>(_all.Where(p => !p.IsBasic).ToArray()); 
 
     public static IReadOnlyList<AppPermission> BasicPermissions { get; } =
         new ReadOnlyCollection<AppPermission>(_all.Where(p => p.IsBasic).ToArray());

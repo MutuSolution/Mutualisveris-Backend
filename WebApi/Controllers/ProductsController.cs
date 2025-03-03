@@ -52,7 +52,7 @@ public class ProductsController : MyBaseController<ProductsController>
 
     [HttpGet("all-core")]
     [MustHavePermission(AppFeature.Products, AppAction.Read)]
-    public async Task<IActionResult> GetProductList()
+    public async Task<IActionResult> GetProductCore()
     {
         var response = await MediatorSender.Send(new GetProductQuery());
         if (response.IsSuccessful) return Ok(response);
@@ -71,7 +71,7 @@ public class ProductsController : MyBaseController<ProductsController>
 
     [HttpGet("all")]
     [MustHavePermission(AppFeature.Products, AppAction.Read)]
-    public async Task<IActionResult> GetProducts([FromQuery] ProductParameters parameters)
+    public async Task<IActionResult> GetProductsAll([FromQuery] ProductParameters parameters)
     {
         var query = new GetPagedProductsQuery { Parameters = parameters };
         var result = await MediatorSender.Send(query);

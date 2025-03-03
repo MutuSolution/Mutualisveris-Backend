@@ -1,5 +1,6 @@
 ﻿namespace Common.Requests.Admin;
 
+// admin -> Update User Details
 public class AdminUpdateUserRequest
 {
     public string UserId { get; set; } // Zorunlu
