@@ -7,11 +7,6 @@ using Domain;
 using Domain.Responses;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services;
 
@@ -34,7 +29,7 @@ public class CategoryService : ICategoryService
         var categoryInDb = await _context.Categories.FirstOrDefaultAsync(x => x.Name == category.Name);
         if (categoryInDb is not null)
             await ResponseWrapper.FailAsync("[ML63] Category already taken.");
-     
+
         await _context.Categories.AddAsync(category);
         await _context.SaveChangesAsync();
         return category;

@@ -8,7 +8,7 @@ using Common.Responses.Pagination;
 using global::WebApi.Attributes;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class LikesController : MyBaseController<LikesController>
 {
 

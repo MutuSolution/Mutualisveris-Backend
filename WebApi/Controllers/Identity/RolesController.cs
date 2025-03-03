@@ -7,7 +7,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers.Identity
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class RolesController : MyBaseController<RolesController>
     {
         [HttpPost]

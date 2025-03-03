@@ -8,7 +8,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ProductsController : MyBaseController<ProductsController>
 {
     [HttpPost]

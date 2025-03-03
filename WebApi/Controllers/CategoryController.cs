@@ -1,14 +1,12 @@
 ﻿using Application.Features.Categories.Commands;
-using Application.Features.Products.Commands;
 using Common.Authorization;
 using Common.Request.Category;
-using Common.Requests.Products;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Attributes;
 
 namespace WebApi.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class CategoryController : MyBaseController<CategoryController>
 {
     [HttpPost]
@@ -16,7 +14,7 @@ public class CategoryController : MyBaseController<CategoryController>
     public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest request)
     {
         var response = await MediatorSender
-            .Send(new CreateCategoryCommand { Request =  request });
+            .Send(new CreateCategoryCommand { Request = request });
         if (response.IsSuccessful) return Ok(response);
         return BadRequest(response);
     }

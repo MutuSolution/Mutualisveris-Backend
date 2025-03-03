@@ -1,14 +1,7 @@
-﻿using Common.Requests.Products;
-using Common.Responses.Pagination;
-using Common.Responses.Products;
+﻿using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain;
 using Domain.Responses;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services;
 

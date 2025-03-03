@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebApi.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class LanguageController : MyBaseController<LanguageController>
     {
         private readonly LanguageService _localizationService;

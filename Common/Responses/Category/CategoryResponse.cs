@@ -8,7 +8,7 @@
         public int? ParentCategoryId { get; set; }
         public bool IsVisible { get; set; }
         public string ParentCategoryName { get; set; }
-        public List<CategoryResponse> SubCategories { get; set; } 
+        public List<CategoryResponse> SubCategories { get; set; }
             = new List<CategoryResponse>();
         public int ProductCount { get; set; }
     }
