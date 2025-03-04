@@ -13,7 +13,7 @@ public class UpdateProductRequestValidator : AbstractValidator<UpdateProductRequ
         RuleFor(x => x.Id)
             .MustAsync(async (id, cancellation) => await productService
             .GetProductByIdAsync(id) is ProductResponse existing)
-            .WithMessage("[ML27] Product does not exit.");
+            .WithMessage("[ML27] Ürün bulunamadı.");
 
         RuleFor(x => x.Title)
         .NotEmpty();

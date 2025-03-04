@@ -29,15 +29,15 @@ public class UserRegistrationRequestValidator : AbstractValidator<UserRegistrati
 
 
         RuleFor(x => x.Email)
-        .NotNull().WithMessage("[ML1] Email cannot be null.")
-        .NotEmpty().WithMessage("[ML2] Email cannot be empty.")
-        .EmailAddress().WithMessage("[ML3] Invalid email format.")
+        .NotNull().WithMessage("[ML1] Mail boş olamaz.")
+        .NotEmpty().WithMessage("[ML2] Mail boş olamaz.")
+        .EmailAddress().WithMessage("[ML3] Mail yanlış formatta.")
         .Must(email => !bannedDomains.Any(domain => email.EndsWith($"@{domain}")))
-        .WithMessage("[ML4] Email domain is not allowed.")
-        .MaximumLength(200).WithMessage("[ML5] Email cannot exceed 200 characters.")
+        .WithMessage("[ML4] Mail adresine izin verilmedi.")
+        .MaximumLength(200).WithMessage("[ML5] Mail 200 karakterden fazla olamaz.")
         .MustAsync(async (email, cancellation) => await userService
         .GetUserByEmailAsync(email) is not UserResponse existing)
-        .WithMessage("[ML6] Email is already taken.");
+        .WithMessage("[ML6] Mail zaten alınmış.");
 
         RuleFor(x => x.FirstName)
             .NotEmpty()
@@ -49,14 +49,14 @@ public class UserRegistrationRequestValidator : AbstractValidator<UserRegistrati
 
 
         RuleFor(x => x.Password)
-         .MinimumLength(8).WithMessage("[ML15] Password must be at least 8 characters long.")
-         //.Matches(@"[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-         //.Matches(@"[a-z]").WithMessage("Password must contain at least one lowercase letter.")
-         //.Matches(@"[0-9]").WithMessage("Password must contain at least one digit.")
+         .MinimumLength(8).WithMessage("[ML215] Şifreniz en az 8 karakter olmalı.")
+         .Matches(@"[A-Z]").WithMessage("[ML213] Şifreniz en az 1 Büyük harf içermeli.")
+         .Matches(@"[a-z]").WithMessage("[ML212] Şifreniz en az 1 küçük harf içermeli.")
+         .Matches(@"[0-9]").WithMessage("[ML211] Şifreniz en az 1 rakam içermeli.")
          //.Matches(@"[\W]").WithMessage("Password must contain at least one special character.")
-         .NotEmpty().WithMessage("[ML16] Password cannot be empty.");
+         .NotEmpty().WithMessage("[ML214] Şifre boş olamaz");
 
         RuleFor(x => x.ConfirmPassword)
-            .Equal(x => x.Password).WithMessage("[ML17] Password confirmation does not match.");
+            .Equal(x => x.Password).WithMessage("[ML17] Şifreler eşleşmedi.");
     }
 }

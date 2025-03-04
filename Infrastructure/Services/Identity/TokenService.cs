@@ -33,41 +33,41 @@ public class TokenService : ITokenService
         if (tokenRequest.Email is null)
         {
             return await ResponseWrapper<TokenResponse>
-                .FailAsync("[ML95] Email must not be null.");
+                .FailAsync("[ML95] Email boş olamaz");
         }
 
         var user = await _userManager.FindByEmailAsync(tokenRequest.Email);
 
         if (user is null)
         {
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML42] Invalid Credentials.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML42] Mail yada şifreniz yanlış.");
         }
 
         if (!user.LockoutEnabled)
         {
             return await ResponseWrapper<TokenResponse>
-                .FailAsync("[ML43] User not active. Please try later.");
+                .FailAsync("[ML43] Hesap beklemeye alınmış, lütfen daha sonra tekrar deneyiniz.");
         }
         if (!user.IsActive)
         {
             return await ResponseWrapper<TokenResponse>
-                .FailAsync("[ML104] User not active. Please contact the administrator.");
+                .FailAsync("[ML104] Hesap aktif değil lütfen, iletişime geçiniz.");
         }
         if (!user.EmailConfirmed)
         {
             return await ResponseWrapper<TokenResponse>
-                .FailAsync("[ML105] User email not active. Please confirm.");
+                .FailAsync("[ML105] Email adresinizi onaylayınız.");
         }
 
         if (await _userManager.IsLockedOutAsync(user))
         {
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML44] User not active. Please try again later.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML44] Hesap beklemeye alındı, lütfen daha sonra tekrar deneyiniz.");
         }
 
         if (!await _userManager.CheckPasswordAsync(user, tokenRequest.Password))
         {
             await _userManager.AccessFailedAsync(user);
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML46] Invalid Credentials.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML46] Mail yada şifreniz yanlış.");
         }
         await _userManager.ResetAccessFailedCountAsync(user);
         user.RefreshToken = GenerateRefreshToken();
@@ -90,17 +90,17 @@ public class TokenService : ITokenService
 
         if (refreshTokenRequest is null)
         {
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML47] Invalid Client Token.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML47] Bilinmeyen token.");
         }
         var userPrincipal = GetPrincipalFromExpiredToken(refreshTokenRequest.Token);
         var userEmail = userPrincipal.FindFirstValue(ClaimTypes.Email);
         var user = await _userManager.FindByEmailAsync(userEmail);
 
         if (user is null)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML48] User Not Found.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML48] Hesap bulunamadı.");
         if (user.RefreshToken != refreshTokenRequest.RefreshToken ||
             user.RefreshTokenExpiryDate <= DateTime.Now)
-            return await ResponseWrapper<TokenResponse>.FailAsync("[ML49] Invalid Client Token.");
+            return await ResponseWrapper<TokenResponse>.FailAsync("[ML49] Bilinmeyen token.");
 
         var token = GenerateEncrytedToken(GetSigningCredentials(), await GetClaimsAsync(user));
         user.RefreshToken = GenerateRefreshToken();
@@ -196,7 +196,7 @@ public class TokenService : ITokenService
             || !jwtSecurityToken.Header.Alg
             .Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
         {
-            throw new SecurityTokenException("[ML50] Invalid token.");
+            throw new SecurityTokenException("[ML50] Bilinmeyen token.");
         }
 
         return principal;

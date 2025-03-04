@@ -10,6 +10,7 @@ public class TokenRequestValidator : AbstractValidator<TokenRequest>
             .EmailAddress().WithMessage("Geçerli bir email giriniz.");
 
         RuleFor(x => x.Password)
-            .NotEmpty().WithMessage("Şifre gereklidir.");
+            .NotEmpty().WithMessage("Şifre gereklidir.")
+            .MinimumLength(8).WithMessage("[ML215] Şifreniz en az 8 karakter olmalı.");
     }
 }

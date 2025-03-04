@@ -92,10 +92,10 @@ namespace WebApi
                 .AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
                     options.Password.RequiredLength = 8;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireLowercase = false;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireDigit = true;
                     options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
 
                     options.User.RequireUniqueEmail = true;
 

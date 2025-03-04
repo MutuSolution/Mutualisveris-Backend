@@ -1,11 +1,12 @@
-﻿using Application.Services.Identity;
+﻿using Application.Pipelines;
+using Application.Services.Identity;
 using Common.Requests.Identity;
 using Common.Responses.Wrappers;
 using MediatR;
 
 namespace Application.Features.Identity.Users.Commands;
 
-public class ChangeUserPasswordCommand : IRequest<IResponseWrapper>
+public class ChangeUserPasswordCommand : IRequest<IResponseWrapper>, IValidateMe
 {
     public ChangePasswordRequest ChangePassword { get; set; }
 }

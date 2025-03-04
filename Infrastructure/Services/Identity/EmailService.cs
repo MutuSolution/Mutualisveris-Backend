@@ -33,16 +33,16 @@ namespace Infrastructure.Services.Identity
             // Email alanı kontrolü: null, boş veya sadece boşluk karakterleri kontrol ediliyor.
             if (string.IsNullOrWhiteSpace(request.Email))
                 return (ResponseWrapper)await
-                    ResponseWrapper.FailAsync("[ML91] Email required.");
+                    ResponseWrapper.FailAsync("[ML91] Doğru maili giriniz.");
 
             var user = await _userManager.FindByEmailAsync(request.Email);
             if (user is null)
                 return (ResponseWrapper)await
-                    ResponseWrapper.FailAsync("[ML92] User does not exist.");
+                    ResponseWrapper.FailAsync("[ML92] Kullanıcı bulunamadı.");
 
             if (user.EmailConfirmed)
                 return (ResponseWrapper)await
-                    ResponseWrapper.FailAsync("[ML93] User already confirmed.");
+                    ResponseWrapper.FailAsync("[ML93] Kullanıcı doğrulanmış.");
 
             // Email onay token'ı oluşturuluyor.
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -76,14 +76,14 @@ namespace Infrastructure.Services.Identity
             {
                 // Hata loglama yapılabilir: _logger.LogError(ex, "Email gönderim hatası");
                 return (ResponseWrapper)await ResponseWrapper
-                    .FailAsync($"[ML90] Email sending failed: {ex.Message}");
+                    .FailAsync($"[ML90] Mail gönderilemedi: {ex.Message}");
             }
             finally
             {
                 await client.DisconnectAsync(true);
             }
 
-            return await ResponseWrapper<string>.SuccessAsync("[ML94] Verification code has been sent.");
+            return await ResponseWrapper<string>.SuccessAsync("[ML94] Doğrulama kodu gönderildi.");
         }
 
         // Email mesajı oluşturma işlemi ayrı metodda toplanarak kod tekrarı azaltıldı.
@@ -96,12 +96,12 @@ namespace Infrastructure.Services.Identity
 
             message.From.Add(MailboxAddress.Parse(fromAddress));
             message.To.Add(MailboxAddress.Parse(recipientEmail));
-            message.Subject = "Mutualisveris Email Confirmation";
+            message.Subject = "Mutualisveris Email Doğrulama";
 
             var bodyBuilder = new BodyBuilder
             {
-                HtmlBody = $"<p>Welcome to Mutualisveris, your confirmation code is: <strong>{token}</strong></p>",
-                TextBody = $"Welcome to Mutualisveris, your confirmation code is: {token}"
+                HtmlBody = $"<p>Mutualışveriş'e Hoşgeldiniz, doğrulama kodunuz: <strong>{token}</strong></p>",
+                TextBody = $"Mutualışveriş'e Hoşgeldiniz, doğrulama kodunuz: {token}"
             };
 
             message.Body = bodyBuilder.ToMessageBody();
@@ -111,19 +111,19 @@ namespace Infrastructure.Services.Identity
         public async Task<IResponseWrapper> GetEmailConfirmAsync(EmailConfirmRequest emailConfirmRequest)
         {
             if (string.IsNullOrWhiteSpace(emailConfirmRequest.Code))
-                return await ResponseWrapper<TokenResponse>.FailAsync("[ML85] Code required.");
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML85] Kodu giriniz.");
             if (string.IsNullOrWhiteSpace(emailConfirmRequest.Email))
-                return await ResponseWrapper<TokenResponse>.FailAsync("[ML86] Email required.");
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML86] Mail giriniz.");
 
             var user = await _userManager.FindByEmailAsync(emailConfirmRequest.Email);
             if (user is null)
-                return await ResponseWrapper<TokenResponse>.FailAsync("[ML87] User not found.");
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML87] Hesap bulunamadı.");
 
             var confirmationResult = await _userManager.ConfirmEmailAsync(user, emailConfirmRequest.Code);
             if (!confirmationResult.Succeeded)
-                return await ResponseWrapper<TokenResponse>.FailAsync("[ML88] Email not confirmed.");
+                return await ResponseWrapper<TokenResponse>.FailAsync("[ML88] Mail doğrulanamadı.");
 
-            return await ResponseWrapper<TokenResponse>.SuccessAsync("[ML89] Email confirmed.");
+            return await ResponseWrapper<TokenResponse>.SuccessAsync("[ML89] Mail doğrulandı.");
         }
     }
 }
