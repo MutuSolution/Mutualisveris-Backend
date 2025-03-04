@@ -110,8 +110,11 @@ namespace Infrastructure.Services
             }
 
             // Kategori bilgileri güncelleniyor
+            if(string.IsNullOrEmpty(request.Description))
+                categoryInDb.Description = null;
+            else
+                categoryInDb.Description = request.Description;
             categoryInDb.Name = request.Name;
-            categoryInDb.Description = request.Description;
             categoryInDb.ParentCategoryId = request.ParentCategoryId;
             categoryInDb.isVisible = request.IsVisible;
 
@@ -137,10 +140,59 @@ namespace Infrastructure.Services
             }
         }
 
-        public Task<IResponseWrapper> DeleteCategoryAsync(int id)
+        public async Task<IResponseWrapper> DeleteCategoryAsync(int id)
         {
-            throw new NotImplementedException();
+            var categoryInDb = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            if (categoryInDb == null)
+                return await ResponseWrapper<string>.FailAsync("[ML63] Kategori bulunamadı.");
+
+            try
+            {
+                // Silinecek kategoriye bağlı tüm alt ilişkileri rekurziv olarak kaldırıyoruz.
+                await RemoveParentRelationshipRecursive(id);
+
+                // Silme işlemi
+                _context.Categories.Remove(categoryInDb);
+                var saveResult = await _context.SaveChangesAsync();
+
+                if (saveResult > 0)
+                {
+                    var message = "[ML65] Kategori başarıyla silindi.";
+                    return await ResponseWrapper<string>.SuccessAsync(message);
+                }
+                else
+                {
+                    return await ResponseWrapper<string>.FailAsync("Kategori silinirken bir hata oluştu.");
+                }
+            }
+            catch (Exception ex)
+            {
+                var message = "Kategori silinirken bir hata meydana geldi: " + ex.Message;
+                return await ResponseWrapper<string>.FailAsync(message);
+            }
         }
+
+        /// <summary>
+        /// Verilen parentId'ye sahip olan tüm alt kategorilerin ParentCategoryId değerini null yapar.
+        /// Bu metod rekurziv olarak, alt kategorilerinin altındaki kategorileri de günceller.
+        /// </summary>
+        /// <param name="parentId">Silinecek kategorinin Id değeri</param>
+        private async Task RemoveParentRelationshipRecursive(int parentId)
+        {
+            var childCategories = await _context.Categories
+                .Where(c => c.ParentCategoryId == parentId)
+                .ToListAsync();
+
+            foreach (var child in childCategories)
+            {
+                // Parent ilişkiyi kaldırıyoruz
+                child.ParentCategoryId = null;
+                // Altındaki alt kategoriler için de aynı işlemi uyguluyoruz
+                await RemoveParentRelationshipRecursive(child.Id);
+            }
+        }
+
+
 
         public Task<IResponseWrapper> GetCategoryByIdAsync(int id)
         {
@@ -152,9 +204,55 @@ namespace Infrastructure.Services
             throw new NotImplementedException();
         }
 
-        public Task<IResponseWrapper> SoftDeleteCategory(int id)
+        public async Task<IResponseWrapper> SoftDeleteCategory(int id)
         {
-            throw new NotImplementedException();
+            // Silinecek kategori veritabanından getiriliyor
+            var categoryInDb = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id);
+            if (categoryInDb == null)
+                return await ResponseWrapper<string>.FailAsync("[ML63] Kategori bulunamadı.");
+
+            // Ana kategori soft delete ediliyor
+            categoryInDb.isVisible = false;
+
+            // Alt kategoriler rekurziv olarak soft delete ediliyor
+            await SoftDeleteDescendants(categoryInDb.Id);
+
+            try
+            {
+                var saveResult = await _context.SaveChangesAsync();
+
+                if (saveResult > 0)
+                {
+                    var message = "[ML65] Kategori başarıyla silindi.";
+                    return await ResponseWrapper<string>.SuccessAsync(message);
+                }
+                else
+                {
+                    return await ResponseWrapper<string>.FailAsync("Kategori silinirken bir hata oluştu.");
+                }
+            }
+            catch (Exception ex)
+            {
+                var message = "Kategori silinirken bir hata meydana geldi: " + ex.Message;
+                return await ResponseWrapper<string>.FailAsync(message);
+            }
         }
+
+        private async Task SoftDeleteDescendants(int parentId)
+        {
+            // Veritabanından parentId'si verilen kategorinin alt kategorileri getiriliyor
+            var subCategories = await _context.Categories
+                .Where(c => c.ParentCategoryId == parentId)
+                .ToListAsync();
+
+            foreach (var subCategory in subCategories)
+            {
+                // Her alt kategori soft delete ediliyor
+                subCategory.isVisible = false;
+                // Alt kategorilerinin altında da alt kategori varsa, rekurziv olarak devam ediliyor
+                await SoftDeleteDescendants(subCategory.Id);
+            }
+        }
+
     }
 }

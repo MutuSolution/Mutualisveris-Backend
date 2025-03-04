@@ -29,7 +29,7 @@ namespace Infrastructure.DbConfig
             builder.HasOne(c => c.ParentCategory)
                 .WithMany(c => c.SubCategories)
                 .HasForeignKey(c => c.ParentCategoryId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             // İndex: İsim alanında sorgu performansı için
             builder.HasIndex(c => c.Name)

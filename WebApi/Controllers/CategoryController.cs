@@ -31,4 +31,23 @@ public class CategoryController : MyBaseController<CategoryController>
         return BadRequest(response);
     }
 
+    [HttpPut("hard-delete")]
+    [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
+    public async Task<IActionResult> HardDeleteCategoryAsync(int id)
+    {
+        var response = await MediatorSender
+           .Send(new DeleteCategoryCommand { CategoryId = id });
+        if (response.IsSuccessful) return Ok(response);
+        return BadRequest(response);
+    }
+
+    [HttpPut("soft-delete")]
+    [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
+    public async Task<IActionResult> SoftDeleteCategoryAsync(int id)
+    {
+        var response = await MediatorSender
+           .Send(new SoftDeleteCategoryCommand { CategoryId = id });
+        if (response.IsSuccessful) return Ok(response);
+        return BadRequest(response);
+    }
 }
