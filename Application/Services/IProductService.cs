@@ -15,7 +15,7 @@ public interface IProductService
     Task<List<Product>> GetHomeProductListAsync();
     Task<List<Product>> GetPublicProductWithUsernameAsync(string userName);
     Task<ProductResponse> GetProductByIdAsync(int id);
-    Task<Product> UpdateProductAsync(ProductResponse product);
+    Task<Product> UpdateProductAsync(UpdateProductRequest product);
     Task<int> DeleteProductAsync(ProductResponse product);
     Task<IResponseWrapper> SoftDeleteProduct(SoftDeleteProductRequest request);
     Task<IResponseWrapper> LikeProductAsync(LikeProductRequest request, CancellationToken cancellationToken);

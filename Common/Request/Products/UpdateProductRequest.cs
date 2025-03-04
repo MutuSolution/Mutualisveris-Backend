@@ -10,4 +10,6 @@ public class UpdateProductRequest
     public bool IsPublic { get; set; }
     public bool IsDeleted { get; set; }
     public int LikeCount { get; set; }
+    public bool IsLiked { get; init; } = false;
+
 }

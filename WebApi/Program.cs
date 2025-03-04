@@ -9,10 +9,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1) Servis konfigurasyonu ve IoC kayýtlarý
 builder.Services.AddCors(o =>
-    o.AddPolicy("Mutualisveris Cors", policyBuilder =>
+    o.AddPolicy("Mutuapp cors", builder =>
     {
-        policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-    }));
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    }
+    ));
 builder.Services.AddCustomLocalization();
 builder.Services.AddControllers();
 builder.Services.AddDatabase(builder.Configuration);
@@ -56,7 +60,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 // CORS
-app.UseCors("Mutualisveris Cors");
+app.UseCors("Mutuapp cors");
 
 // Yerelleþtirme (Localizasyon)
 app.UseRequestLocalization(

@@ -31,7 +31,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
             .GetProductByIdAsync(request.UpdateProductRequest.Id);
         if (productInDb is not null)
         {
-            var updatedProduct = new ProductResponse
+            var updatedProduct = new UpdateProductRequest
             {
                 Id = productInDb.Id,
                 Title = request.UpdateProductRequest.Title,

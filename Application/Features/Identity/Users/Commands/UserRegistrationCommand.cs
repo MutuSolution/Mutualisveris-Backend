@@ -11,8 +11,7 @@ public class UserRegistrationCommand : IRequest<IResponseWrapper>, IValidateMe
     public UserRegistrationRequest UserRegistration { get; set; }
 }
 
-public class UserRegistrationCommandHandler :
-    IRequestHandler<UserRegistrationCommand, IResponseWrapper>
+public class UserRegistrationCommandHandler : IRequestHandler<UserRegistrationCommand, IResponseWrapper>
 {
     private readonly IUserService _userService;
 

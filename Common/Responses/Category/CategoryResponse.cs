@@ -2,14 +2,14 @@
 {
     public class CategoryResponse
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public int? ParentCategoryId { get; set; }
-        public bool IsVisible { get; set; }
-        public string ParentCategoryName { get; set; }
-        public List<CategoryResponse> SubCategories { get; set; }
+        public int Id { get; init; }
+        public string Name { get; init; }
+        public string Description { get; init; }
+        public int? ParentCategoryId { get; init; }
+        public bool IsVisible { get; init; }
+        public string ParentCategoryName { get; init; }
+        public List<CategoryResponse> SubCategories { get; init; }
             = new List<CategoryResponse>();
-        public int ProductCount { get; set; }
+        public int ProductCount { get; init; }
     }
 }

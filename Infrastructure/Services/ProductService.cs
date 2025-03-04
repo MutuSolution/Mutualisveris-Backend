@@ -113,7 +113,7 @@ public class ProductService : IProductService
             .Take(25)
             .ToListAsync();
     }
-    public async Task<Product> UpdateProductAsync(ProductResponse productResponse)
+    public async Task<Product> UpdateProductAsync(UpdateProductRequest productResponse)
     {
         var product = await _context.Products.FindAsync(productResponse.Id);
         if (product == null)
@@ -261,10 +261,13 @@ public class ProductService : IProductService
     public async Task<IResponseWrapper> SoftDeleteProduct(SoftDeleteProductRequest request)
     {
         var productInDb = _context.Products.Find(request.ProductId);
+        if (productInDb is null)
+            return await ResponseWrapper<string>.FailAsync("[ML63] Ürün bulunamadı.");
+
         productInDb.IsDeleted = true;
         _context.Products.Update(productInDb);
         await _context.SaveChangesAsync();
-        return ResponseWrapper.Success("[ML74] Product successfully deleted.");
+        return ResponseWrapper<string>.Success("[ML74] Ürün başarıyla silindi.");
     }
 
     public async Task<IResponseWrapper> LikeProductAsync(LikeProductRequest request, CancellationToken cancellationToken)
