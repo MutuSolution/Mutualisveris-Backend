@@ -4,37 +4,52 @@ using Common.Responses.Identity;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using MediatR;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Application.Features.Identity.Users.Queries;
-
-public class GetPagedUsersQuery : IRequest<IResponseWrapper<PaginationResult<UserResponse>>>
+namespace Application.Features.Identity.Users.Queries
 {
-    public UserParameters Parameters { get; set; } = new UserParameters();
-}
-
-public class GetPagedUsersQueryHandler : IRequestHandler<GetPagedUsersQuery, IResponseWrapper<PaginationResult<UserResponse>>>
-{
-    private readonly IUserService _userService;
-    private readonly IMapper _mapper;
-
-    public GetPagedUsersQueryHandler(IUserService userService, IMapper mapper)
+    public class GetPagedUsersQuery : IRequest<IResponseWrapper<PaginationResult<UserResponse>>>
     {
-        _userService = userService;
-        _mapper = mapper;
+        public UserParameters Parameters { get; set; } = new UserParameters();
     }
 
-    async Task<IResponseWrapper<PaginationResult<UserResponse>>> IRequestHandler<GetPagedUsersQuery, IResponseWrapper<PaginationResult<UserResponse>>>.Handle(GetPagedUsersQuery request, CancellationToken cancellationToken)
+    public class GetPagedUsersQueryHandler : IRequestHandler<GetPagedUsersQuery, IResponseWrapper<PaginationResult<UserResponse>>>
     {
-        var pagedResult = await _userService.GetPagedUsersAsync(request.Parameters);
-        var mappedItems = _mapper.Map<IEnumerable<UserResponse>>(pagedResult.Items);
-        return await ResponseWrapper<PaginationResult<UserResponse>>
-        .SuccessAsync(new PaginationResult<UserResponse>(
-            mappedItems,
-            pagedResult.TotalCount,
-            pagedResult.TotalPage,
-            pagedResult.Page,
-            pagedResult.ItemsPerPage
-        ));
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
+        public GetPagedUsersQueryHandler(IUserService userService, IMapper mapper)
+        {
+            _userService = userService;
+            _mapper = mapper;
+        }
+
+        public async Task<IResponseWrapper<PaginationResult<UserResponse>>> Handle(GetPagedUsersQuery request, CancellationToken cancellationToken)
+        {
+            // Servisten sayfalı kullanıcı verisi alınıyor
+            var pagedResultWrapper = await _userService.GetPagedUsersAsync(request.Parameters);
+
+            // Servisten hata döndüyse direkt hata mesajını iletelim
+            if (!pagedResultWrapper.IsSuccessful)
+            {
+                return ResponseWrapper<PaginationResult<UserResponse>>.Fail(pagedResultWrapper.Messages);
+            }
+
+            // Gelen verideki Items'ı DTO'ya eşliyoruz
+            var mappedItems = _mapper.Map<IEnumerable<UserResponse>>(pagedResultWrapper.ResponseData.Items);
+
+            var paginationResult = new PaginationResult<UserResponse>(
+                mappedItems,
+                pagedResultWrapper.ResponseData.TotalCount,
+                pagedResultWrapper.ResponseData.TotalPage,
+                pagedResultWrapper.ResponseData.Page,
+                pagedResultWrapper.ResponseData.ItemsPerPage
+            );
+
+            // Başarılı sonuç, mesaj ile birlikte döndürülüyor
+            return await ResponseWrapper<PaginationResult<UserResponse>>.SuccessAsync(paginationResult, "Sayfalı kullanıcı listesi başarıyla getirildi.");
+        }
     }
 }

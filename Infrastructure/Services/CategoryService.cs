@@ -60,22 +60,21 @@ namespace Infrastructure.Services
 
                 if (saveResult > 0)
                 {
-                    // Güncel veriyi Include ile çekip mapleyelim
+                    // Include ile ilişkili veriyi çekiyoruz
                     var createdCategory = await _context.Categories
                         .Include(c => c.ParentCategory)
                         .FirstOrDefaultAsync(c => c.Id == newCategory.Id);
                     var mappedCategory = _mapper.Map<CategoryResponse>(createdCategory);
-                    return await ResponseWrapper<CategoryResponse>
-                        .SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla eklendi.");
+                    return await ResponseWrapper<CategoryResponse>.SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla eklendi.");
                 }
                 else
                 {
-                    return await ResponseWrapper<CategoryResponse>
-                        .FailAsync("Kategori kaydedilirken bir hata oluştu.");
+                    return await ResponseWrapper<CategoryResponse>.FailAsync("Kategori kaydedilirken bir hata oluştu.");
                 }
             }
             catch (Exception ex)
             {
+                // Hata loglama eklenebilir
                 var message = "Kategori oluşturulurken bir hata meydana geldi: " + ex.Message;
                 return await ResponseWrapper<CategoryResponse>.FailAsync(message);
             }
@@ -94,8 +93,7 @@ namespace Infrastructure.Services
             {
                 var duplicateCategory = await _context.Categories.FirstOrDefaultAsync(x => x.Name.ToLower() == request.Name.ToLower());
                 if (duplicateCategory != null)
-                    return await ResponseWrapper<CategoryResponse>
-                        .FailAsync("[ML63] Bu isimde başka bir kategori mevcut.");
+                    return await ResponseWrapper<CategoryResponse>.FailAsync("[ML63] Bu isimde başka bir kategori mevcut.");
             }
 
             if (request.ParentCategoryId.HasValue)
@@ -122,13 +120,11 @@ namespace Infrastructure.Services
                         .Include(c => c.ParentCategory)
                         .FirstOrDefaultAsync(c => c.Id == categoryInDb.Id);
                     var mappedCategory = _mapper.Map<CategoryResponse>(updatedCategory);
-                    return await ResponseWrapper<CategoryResponse>
-                        .SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla güncellendi.");
+                    return await ResponseWrapper<CategoryResponse>.SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla güncellendi.");
                 }
                 else
                 {
-                    return await ResponseWrapper<CategoryResponse>
-                        .FailAsync("Kategori güncellenirken bir hata oluştu.");
+                    return await ResponseWrapper<CategoryResponse>.FailAsync("Kategori güncellenirken bir hata oluştu.");
                 }
             }
             catch (Exception ex)
@@ -148,18 +144,16 @@ namespace Infrastructure.Services
             {
                 await RemoveParentRelationshipRecursive(id);
 
-                // Mapleme işlemi için bilgiyi saklıyoruz
+                // Mapleme için mevcut bilgiyi alıyoruz
                 var mappedCategory = _mapper.Map<CategoryResponse>(categoryInDb);
 
                 _context.Categories.Remove(categoryInDb);
                 var saveResult = await _context.SaveChangesAsync();
 
                 if (saveResult > 0)
-                    return await ResponseWrapper<CategoryResponse>
-                        .SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla silindi.");
+                    return await ResponseWrapper<CategoryResponse>.SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla silindi.");
                 else
-                    return await ResponseWrapper<CategoryResponse>
-                        .FailAsync("Kategori silinirken bir hata oluştu.");
+                    return await ResponseWrapper<CategoryResponse>.FailAsync("Kategori silinirken bir hata oluştu.");
             }
             catch (Exception ex)
             {
@@ -196,13 +190,11 @@ namespace Infrastructure.Services
                     return await ResponseWrapper<CategoryResponse>.FailAsync("[ML63] Kategori bulunamadı.");
 
                 var mappedCategory = _mapper.Map<CategoryResponse>(categoryInDb);
-                return await ResponseWrapper<CategoryResponse>
-                    .SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla getirildi.");
+                return await ResponseWrapper<CategoryResponse>.SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla getirildi.");
             }
             catch (Exception ex)
             {
-                return await ResponseWrapper<CategoryResponse>
-                    .FailAsync("Kategori getirilirken bir hata meydana geldi: " + ex.Message);
+                return await ResponseWrapper<CategoryResponse>.FailAsync("Kategori getirilirken bir hata meydana geldi: " + ex.Message);
             }
         }
 
@@ -240,8 +232,7 @@ namespace Infrastructure.Services
                 parameters.Page,
                 parameters.ItemsPerPage);
 
-            return ResponseWrapper<PaginationResult<CategoryResponse>>
-                .Success(paginationResult, "[ML65] Kategoriler başarıyla getirildi.");
+            return ResponseWrapper<PaginationResult<CategoryResponse>>.Success(paginationResult, "[ML65] Kategoriler başarıyla getirildi.");
         }
 
         public async Task<IResponseWrapper<CategoryResponse>> SoftDeleteCategory(int id)
@@ -262,8 +253,7 @@ namespace Infrastructure.Services
                         .Include(c => c.ParentCategory)
                         .FirstOrDefaultAsync(c => c.Id == categoryInDb.Id);
                     var mappedCategory = _mapper.Map<CategoryResponse>(updatedCategory);
-                    return await ResponseWrapper<CategoryResponse>
-                        .SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla silindi.");
+                    return await ResponseWrapper<CategoryResponse>.SuccessAsync(mappedCategory, "[ML65] Kategori başarıyla silindi.");
                 }
                 else
                 {
