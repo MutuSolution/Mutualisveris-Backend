@@ -1,7 +1,7 @@
 ﻿namespace Common.Requests.Product.Report;
 
-public class ProductReportIsCheckedRequest
+public record ProductReportIsCheckedRequest
 {
-    public int ReportId { get; set; }
-    public bool IsChecked { get; set; }
+    public int ReportId { get; init; }
+    public bool IsChecked { get; init; }
 }

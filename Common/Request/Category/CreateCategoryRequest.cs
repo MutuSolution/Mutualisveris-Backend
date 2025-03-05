@@ -1,9 +1,9 @@
 ﻿namespace Common.Request.Category;
 
-public class CreateCategoryRequest
+public record CreateCategoryRequest
 {
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public int? ParentCategoryId { get; set; }
-    public bool IsVisible { get; set; } = true;
+    public string Name { get; init; }
+    public string Description { get; init; }
+    public int? ParentCategoryId { get; init; }
+    public bool IsVisible { get; init; } = true;
 }

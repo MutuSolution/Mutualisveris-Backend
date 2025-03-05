@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Application.Services.Identity;
+using FluentValidation.Resources;
 using Infrastructure.Context;
 using Infrastructure.Services;
 using Infrastructure.Services.Identity;
@@ -49,7 +50,8 @@ public static class ServiceCollectionExtensions
         services
             .AddTransient<IEmailService, EmailService>();
         return services;
-    }
+    } 
+    
     public static void AddInfrastructureDependencies(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());

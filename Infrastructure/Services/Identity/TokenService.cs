@@ -77,11 +77,11 @@ namespace Infrastructure.Services.Identity
 
             var jwtToken = await GenerateJWTAsync(user);
             var response = new TokenResponse
-            {
-                Token = jwtToken,
-                RefreshToken = user.RefreshToken,
-                RefreshTokenExpiryTime = user.RefreshTokenExpiryDate
-            };
+            (
+                jwtToken,
+                user.RefreshToken,
+                user.RefreshTokenExpiryDate
+            );
 
             // Başarılı response data varsa, tek mesaj ile döndürülüyor.
             return await ResponseWrapper<TokenResponse>.SuccessAsync(response, "[ML65] Token başarıyla oluşturuldu.");
@@ -112,11 +112,11 @@ namespace Infrastructure.Services.Identity
             await _userManager.UpdateAsync(user);
 
             var response = new TokenResponse
-            {
-                Token = newJwtToken,
-                RefreshToken = user.RefreshToken,
-                RefreshTokenExpiryTime = user.RefreshTokenExpiryDate
-            };
+            (
+                newJwtToken,
+                user.RefreshToken,
+                user.RefreshTokenExpiryDate
+            );
 
             return await ResponseWrapper<TokenResponse>.SuccessAsync(response, "[ML65] Token başarıyla yenilendi.");
         }

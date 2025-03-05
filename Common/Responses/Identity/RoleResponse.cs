@@ -1,8 +1,8 @@
 ﻿namespace Common.Responses.Identity;
 
-public class RoleResponse
-{
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-}
+public record RoleResponse
+(
+     string Id,
+     string Name,
+     string Description
+);

@@ -2,21 +2,14 @@
 using Application.Services;
 using AutoMapper;
 using Common.Request.Category;
-using Common.Responses.Products;
 using Common.Responses.Wrappers;
-using Domain.Responses;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Features.Categories.Commands;
 
 public class UpdateCategoryCommand : IRequest<IResponseWrapper>, IValidateMe
 {
-    public UpdateCategoryRequest  UpdateCategory { get; set; }
+    public UpdateCategoryRequest UpdateCategory { get; set; }
 }
 
 public class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, IResponseWrapper>

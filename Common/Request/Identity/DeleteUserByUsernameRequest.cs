@@ -1,6 +1,6 @@
 ﻿namespace Common.Requests.Identity;
 
-public class DeleteUserByUsernameRequest
+public record DeleteUserByUsernameRequest
 {
-    public string UserName { get; set; }
+    public string UserName { get; init; }
 }

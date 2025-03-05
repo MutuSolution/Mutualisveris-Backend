@@ -1,9 +1,9 @@
 ﻿namespace Common.Requests.Identity;
 
-public class ChangePasswordRequest
+public record ChangePasswordRequest
 {
-    public string UserId { get; set; }
-    public string CurrentPassword { get; set; }
-    public string NewPassword { get; set; }
-    public string ConfirmedNewPassword { get; set; }
+    public string UserId { get; init; }
+    public string CurrentPassword { get; init; }
+    public string NewPassword { get; init; }
+    public string ConfirmedNewPassword { get; init; }
 }

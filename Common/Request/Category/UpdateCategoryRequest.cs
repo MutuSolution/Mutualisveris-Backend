@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Common.Request.Category;
 
-namespace Common.Request.Category;
-
-public class UpdateCategoryRequest
+public record UpdateCategoryRequest
 {
-    public int Id { get; set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public int? ParentCategoryId { get; set; }
-    public bool IsVisible { get; set; } = true;
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public string Description { get; init; }
+    public int? ParentCategoryId { get; init; }
+    public bool IsVisible { get; init; } = true;
 }

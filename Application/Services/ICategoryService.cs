@@ -1,7 +1,6 @@
 ﻿using Common.Request.Category;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
-using Domain;
 using Domain.Responses;
 
 namespace Application.Services;

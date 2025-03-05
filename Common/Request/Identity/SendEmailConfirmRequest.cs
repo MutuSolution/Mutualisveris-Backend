@@ -2,10 +2,10 @@
 
 namespace Common.Requests.Identity;
 
-public class SendEmailConfirmRequest
+public record SendEmailConfirmRequest
 {
 
     [Required, EmailAddress]
-    public string Email { get; set; }
+    public string Email { get; init; }
 
 }

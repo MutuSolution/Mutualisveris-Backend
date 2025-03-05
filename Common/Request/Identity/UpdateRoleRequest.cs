@@ -1,8 +1,8 @@
 ﻿namespace Common.Requests.Identity;
 
-public class UpdateRoleRequest
+public record UpdateRoleRequest
 {
-    public string RoleId { get; set; }
-    public string RoleName { get; set; }
-    public string RoleDescription { get; set; }
+    public string RoleId { get; init; }
+    public string RoleName { get; init; }
+    public string RoleDescription { get; init; }
 }

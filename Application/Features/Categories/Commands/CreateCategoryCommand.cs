@@ -1,10 +1,7 @@
 ﻿using Application.Pipelines;
 using Application.Services;
-using AutoMapper;
 using Common.Request.Category;
 using Common.Responses.Wrappers;
-using Domain;
-using Domain.Responses;
 using MediatR;
 
 namespace Application.Features.Categories.Commands;
@@ -20,7 +17,7 @@ public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryComman
     public CreateCategoryCommandHandler(ICategoryService categoryService)
     {
         _categoryService = categoryService;
-     
+
     }
 
     public async Task<IResponseWrapper> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)

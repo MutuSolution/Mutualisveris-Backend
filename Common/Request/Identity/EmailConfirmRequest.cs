@@ -2,12 +2,12 @@
 
 namespace Common.Requests.Identity;
 
-public class EmailConfirmRequest
+public record EmailConfirmRequest
 {
     [Required, EmailAddress]
-    public string Email { get; set; }
+    public string Email { get; init; }
 
     [Required]
-    public string Code { get; set; }
+    public string Code { get; init; }
 
 }

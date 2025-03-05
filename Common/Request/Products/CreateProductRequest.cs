@@ -1,6 +1,6 @@
 ﻿namespace Common.Requests.Products;
 
-public class CreateProductRequest
+public record CreateProductRequest
 {
     public string Title { get; init; }
     public string Url { get; init; }

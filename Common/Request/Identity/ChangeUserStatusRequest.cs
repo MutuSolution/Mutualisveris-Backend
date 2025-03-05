@@ -1,7 +1,7 @@
 ﻿namespace Common.Requests.Identity;
 
-public class ChangeUserStatusRequest
+public record ChangeUserStatusRequest
 {
-    public string UserId { get; set; }
-    public bool Activate { get; set; }
+    public string UserId { get; init; }
+    public bool Activate { get; init; }
 }

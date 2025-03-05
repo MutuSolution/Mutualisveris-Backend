@@ -3,7 +3,6 @@ using Application.Features.Identity.Users.Commands;
 using Common.Authorization;
 using Common.Requests.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Attributes;
 

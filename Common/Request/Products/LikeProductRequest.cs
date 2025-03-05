@@ -1,6 +1,6 @@
 ﻿namespace Common.Requests.Products;
 
-public class LikeProductRequest
+public record LikeProductRequest
 {
-    public int ProductId { get; set; }
+    public int ProductId { get; init; }
 }

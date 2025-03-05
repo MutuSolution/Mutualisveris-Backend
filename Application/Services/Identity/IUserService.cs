@@ -2,16 +2,13 @@
 using Common.Responses.Identity;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
-using Domain;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.Services.Identity
 {
     public interface IUserService
     {
-        Task<IResponseWrapper<string>> RegisterUserAsync(UserRegistrationRequest request);
-        Task<IResponseWrapper<string>> RegisterUserByAdminAsync(UserRegistrationRequest request);
+        Task<IResponseWrapper<RegisterResponse>> RegisterUserAsync(UserRegistrationRequest request);
+        Task<IResponseWrapper<RegisterResponse>> RegisterUserByAdminAsync(UserRegistrationRequest request);
         Task<IResponseWrapper<UserResponse>> GetUserByIdAsync(string userId);
         Task<IResponseWrapper<UserResponse>> GetUserByEmailAsync(string email);
         Task<IResponseWrapper<UserResponse>> GetUserByUserNameAsync(string username);

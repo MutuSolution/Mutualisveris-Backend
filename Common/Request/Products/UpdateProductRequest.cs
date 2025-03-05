@@ -1,15 +1,15 @@
 ﻿namespace Common.Requests.Products;
 
-public class UpdateProductRequest
+public record UpdateProductRequest
 {
-    public int Id { get; set; }
-    public string Title { get; set; }
-    public string Url { get; set; }
-    public string UserName { get; set; }
-    public string Description { get; set; }
-    public bool IsPublic { get; set; }
-    public bool IsDeleted { get; set; }
-    public int LikeCount { get; set; }
+    public int Id { get; init; }
+    public string Title { get; init; }
+    public string Url { get; init; }
+    public string UserName { get; init; }
+    public string Description { get; init; }
+    public bool IsPublic { get; init; }
+    public bool IsDeleted { get; init; }
+    public int LikeCount { get; init; }
     public bool IsLiked { get; init; } = false;
 
 }

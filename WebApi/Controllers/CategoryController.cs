@@ -1,10 +1,7 @@
 ﻿using Application.Features.Categories.Commands;
 using Application.Features.Categories.Queries;
-using Application.Features.Identity.Users.Queries;
-using Application.Features.Products.Commands;
 using Common.Authorization;
 using Common.Request.Category;
-using Common.Requests.Products;
 using Common.Responses.Pagination;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

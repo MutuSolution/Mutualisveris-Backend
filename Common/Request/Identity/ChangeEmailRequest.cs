@@ -1,6 +1,6 @@
 ﻿namespace Common.Requests.Identity;
 
-public class ChangeEmailRequest
+public record ChangeEmailRequest
 {
-    public string Email { get; set; }
+    public string Email { get; init; }
 }

@@ -74,7 +74,6 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                // Hata loglama eklenebilir
                 var message = "Kategori oluşturulurken bir hata meydana geldi: " + ex.Message;
                 return await ResponseWrapper<CategoryResponse>.FailAsync(message);
             }

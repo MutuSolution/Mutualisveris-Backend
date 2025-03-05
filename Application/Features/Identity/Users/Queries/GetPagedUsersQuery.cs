@@ -4,9 +4,6 @@ using Common.Responses.Identity;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Features.Identity.Users.Queries
 {

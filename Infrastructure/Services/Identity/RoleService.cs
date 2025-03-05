@@ -93,15 +93,15 @@ public class RoleService : IRoleService
 
         var allPermissions = AppPermissions.AllPermissions;
         var roleClaimResponse = new RoleClaimResponse
-        {
-            Role = new()
-            {
-                Id = roleId,
-                Name = roleInDb.Name,
-                Description = roleInDb.Description,
-            },
-            RoleClaims = new()
-        };
+        (
+            new RoleResponse
+            (
+                roleId,
+                roleInDb.Name,
+                roleInDb.Description
+            ),
+            new List<RoleClaimViewModel>()
+        );
         var currentRoleClaims = await GetAllClaimsForRoleAsync(roleId);
         var allPermissionsNames = allPermissions.Select(x => x.Name).ToList();
         var currentRoleClaimsValues = currentRoleClaims.Select(x => x.ClaimValue).ToList();

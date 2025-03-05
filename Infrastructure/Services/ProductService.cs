@@ -62,14 +62,23 @@ public class ProductService : IProductService
     {
         var productInDb = await _context.Products
             .Where(product => product.Id == id).Select(product => new ProductResponse
-            {
-                Id = product.Id,
-                Title = product.Name,
-                Description = product.Description,
-                IsPublic = product.IsPublic,
-                IsDeleted = product.IsDeleted,
-                LikeCount = product.LikeCount
-            })
+            (
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.SKU,
+                product.IsPublic,
+                product.IsDeleted,
+                product.LikeCount,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.Category.Name,
+                product.Images.Select(img => img.ImageUrl).ToList(),
+                product.OrderItems.Count,
+                false
+            ))
             .FirstOrDefaultAsync();
         return productInDb;
     }
@@ -82,15 +91,23 @@ public class ProductService : IProductService
        .ToHashSet();
 
         return await _context.Products.Select(product => new ProductResponse
-        {
-            Id = product.Id,
-            Title = product.Name,
-            Description = product.Description,
-            IsPublic = product.IsPublic,
-            IsDeleted = product.IsDeleted,
-            LikeCount = product.LikeCount,
-            IsLiked = likedProductIds.Contains(product.Id)
-        }).ToListAsync();
+            (
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.SKU,
+                product.IsPublic,
+                product.IsDeleted,
+                product.LikeCount,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.Category.Name,
+                product.Images.Select(img => img.ImageUrl).ToList(),
+                product.OrderItems.Count,
+                false
+            )).ToListAsync();
     }
     public async Task<List<Product>> GetHomeProductListAsync()
     {
@@ -157,15 +174,23 @@ public class ProductService : IProductService
                 .Skip(parameters.Skip)
                 .Take(parameters.ItemsPerPage)
                  .Select(product => new ProductResponse
-                 {
-                     Id = product.Id,
-                     Title = product.Name,
-                     Description = product.Description,
-                     IsPublic = product.IsPublic,
-                     IsDeleted = product.IsDeleted,
-                     LikeCount = product.LikeCount,
-                     IsLiked = likedProductIds.Contains(product.Id)
-                 })
+            (
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.SKU,
+                product.IsPublic,
+                product.IsDeleted,
+                product.LikeCount,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.Category.Name,
+                product.Images.Select(img => img.ImageUrl).ToList(),
+                product.OrderItems.Count,
+                false
+            ))
                 .ToListAsync();
 
         return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
@@ -202,15 +227,23 @@ public class ProductService : IProductService
                 .Skip(parameters.Skip)
                 .Take(parameters.ItemsPerPage)
                  .Select(product => new ProductResponse
-                 {
-                     Id = product.Id,
-                     Title = product.Name,
-                     Description = product.Description,
-                     IsPublic = product.IsPublic,
-                     IsDeleted = product.IsDeleted,
-                     LikeCount = product.LikeCount,
-                     IsLiked = likedProductIds.Contains(product.Id)
-                 })
+            (
+                product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.StockQuantity,
+                product.SKU,
+                product.IsPublic,
+                product.IsDeleted,
+                product.LikeCount,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.Category.Name,
+                product.Images.Select(img => img.ImageUrl).ToList(),
+                product.OrderItems.Count,
+                false
+            ))
                 .ToListAsync();
 
         return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
@@ -243,16 +276,24 @@ public class ProductService : IProductService
         var items = await query
                 .Skip(parameters.Skip)
                 .Take(parameters.ItemsPerPage)
-                 .Select(product => new ProductResponse
-                 {
-                     Id = product.Id,
-                     Title = product.Product.Name,
-                     Description = product.Product.Description,
-                     IsPublic = product.Product.IsPublic,
-                     IsDeleted = product.Product.IsDeleted,
-                     LikeCount = product.Product.LikeCount,
-                     IsLiked = likedProductIds.Contains(product.Product.Id)
-                 })
+                 .Select(like => new ProductResponse
+            (
+                like.Product.Id,
+                like.Product.Name,
+                like.Product.Description,
+                like.Product.Price,
+                like.Product.StockQuantity,
+                like.Product.SKU,
+                like.Product.IsPublic,
+                like.Product.IsDeleted,
+                like.Product.LikeCount,
+                like.Product.CreatedAt,
+                like.Product.UpdatedAt,
+                like.Product.Category.Name,
+                like.Product.Images.Select(img => img.ImageUrl).ToList(),
+                like.Product.OrderItems.Count,
+                false
+            ))
                 .ToListAsync();
 
         return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
@@ -310,12 +351,12 @@ public class ProductService : IProductService
             .ToListAsync();
 
         return productReports.Select(report => new ProductReportResponse
-        {
-            Id = report.Id,
-            ProductId = report.ProductId,
-            Message = report.Message,
-            IsChecked = report.IsChecked
-        }).ToList();
+        (
+            report.Id,
+            report.ProductId,
+            report.Message,
+            report.IsChecked
+        )).ToList();
     }
 
 
@@ -330,22 +371,21 @@ public class ProductService : IProductService
         return searchTerm.Replace("#", "");
     }
 
-    public Task<ProductReportResponse> UpdateReportProductAsync(ProductReportIsCheckedRequest request)
+    public async Task<ProductReportResponse> UpdateReportProductAsync(ProductReportIsCheckedRequest request)
     {
-        var productReport = _context.ProductReports.FirstOrDefault(x => x.Id == request.ReportId);
+        var productReport = await _context.ProductReports.FirstOrDefaultAsync(x => x.Id == request.ReportId);
         if (productReport == null)
         {
-            return Task.FromResult(new ProductReportResponse());
+            return new ProductReportResponse(0, 0, string.Empty, false);
         }
         productReport.IsChecked = request.IsChecked;
         _context.ProductReports.Update(productReport);
-        _context.SaveChanges();
-        return Task.FromResult(new ProductReportResponse
-        {
-            ProductId = productReport.ProductId,
-            Message = productReport.Message,
-            IsChecked = productReport.IsChecked
-        });
+        await _context.SaveChangesAsync();
+        return new ProductReportResponse(
+            productReport.Id,
+            productReport.ProductId,
+            productReport.Message,
+            productReport.IsChecked);
     }
 }
 

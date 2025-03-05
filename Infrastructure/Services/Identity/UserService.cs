@@ -10,9 +10,6 @@ using Domain;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services.Identity
 {
@@ -178,14 +175,16 @@ namespace Infrastructure.Services.Identity
             return await ResponseWrapper<UserResponse>.SuccessAsync(mappedUser, "[ML62] Hesap başarıyla getirildi.");
         }
 
-        public async Task<IResponseWrapper<string>> RegisterUserAsync(UserRegistrationRequest request)
+        public async Task<IResponseWrapper<RegisterResponse>> RegisterUserAsync(UserRegistrationRequest request)
         {
             var userWithEmailInDb = await _userManager.FindByEmailAsync(request.Email);
             if (userWithEmailInDb != null)
-                return await ResponseWrapper<string>.FailAsync("[ML63] Mail zaten alınmış.");
+                return await ResponseWrapper<RegisterResponse>
+                    .FailAsync("[ML63] Mail zaten alınmış.");
 
             if (request.Password != request.ConfirmPassword)
-                return await ResponseWrapper<string>.FailAsync("[ML200] Şifreler eşleşmiyor.");
+                return await ResponseWrapper<RegisterResponse>
+                    .FailAsync("[ML200] Şifreler eşleşmiyor.");
 
             var username = request.Email.Split('@')[0];
             var newUser = new ApplicationUser
@@ -207,19 +206,22 @@ namespace Infrastructure.Services.Identity
             {
                 await _userManager.AddToRoleAsync(newUser, AppRoles.Basic);
                 var message = "[ML65] Kayıt başarılı, lütfen mail adresinizi onaylayınız.";
-                return await ResponseWrapper<string>.SuccessAsync(message);
+                return await ResponseWrapper<RegisterResponse>
+                    .SuccessAsync(message);
             }
             else
             {
-                return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrorDescriptions(identityResult));
+                return await ResponseWrapper<RegisterResponse>
+                    .FailAsync(GetIdentityResultErrorDescriptions(identityResult));
             }
         }
 
-        public async Task<IResponseWrapper<string>> RegisterUserByAdminAsync(UserRegistrationRequest request)
+        public async Task<IResponseWrapper<RegisterResponse>> RegisterUserByAdminAsync(UserRegistrationRequest request)
         {
             var userWithEmailInDb = await _userManager.FindByEmailAsync(request.Email);
             if (userWithEmailInDb != null)
-                return await ResponseWrapper<string>.FailAsync("[ML63] Mail zaten alınmış.");
+                return await ResponseWrapper<RegisterResponse>
+                    .FailAsync("[ML63] Mail zaten alınmış.");
 
             var newUser = new ApplicationUser
             {
@@ -239,11 +241,13 @@ namespace Infrastructure.Services.Identity
             {
                 await _userManager.AddToRoleAsync(newUser, AppRoles.Basic);
                 var message = "[ML102] Kayıt başarılı, mail onaylandı.";
-                return await ResponseWrapper<string>.SuccessAsync(message);
+                return await ResponseWrapper<RegisterResponse>
+                    .SuccessAsync(message);
             }
             else
             {
-                return await ResponseWrapper<string>.FailAsync(GetIdentityResultErrorDescriptions(identityResult));
+                return await ResponseWrapper<RegisterResponse>
+                    .FailAsync(GetIdentityResultErrorDescriptions(identityResult));
             }
         }
 

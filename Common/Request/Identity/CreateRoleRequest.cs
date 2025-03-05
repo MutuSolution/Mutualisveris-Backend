@@ -1,7 +1,7 @@
 ﻿namespace Common.Requests.Identity;
 
-public class CreateRoleRequest
+public record CreateRoleRequest
 {
-    public string RoleName { get; set; }
-    public string RoleDescription { get; set; }
+    public string RoleName { get; init; }
+    public string RoleDescription { get; init; }
 }

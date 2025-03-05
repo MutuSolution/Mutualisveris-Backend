@@ -1,17 +1,17 @@
 ﻿namespace Common.Requests.Admin;
 
 // admin -> Update User Details
-public class AdminUpdateUserRequest
+public record AdminUpdateUserRequest
 {
-    public string UserId { get; set; } // Zorunlu
-    public string? FirstName { get; set; } // Boş olabilir
-    public string? LastName { get; set; } // Boş olabilir
-    public bool IsActive { get; set; } // Zorunlu
-    public bool IsEmailChange { get; set; } = true;
-    public string? Email { get; set; } // Boş olabilir
-    public bool? EmailConfirmed { get; set; } // Boş olabilir
-    public bool IsUserNameChange { get; set; } = true;
-    public string? UserName { get; set; } // Boş olabilir
-    public bool IsPasswordChange { get; set; }
-    public string? Password { get; set; } // Boş olabilir
+    public string UserId { get; init; } // Zorunlu
+    public string? FirstName { get; init; } // Boş olabilir
+    public string? LastName { get; init; } // Boş olabilir
+    public bool IsActive { get; init; } // Zorunlu
+    public bool IsEmailChange { get; init; } = true;
+    public string? Email { get; init; } // Boş olabilir
+    public bool? EmailConfirmed { get; init; } // Boş olabilir
+    public bool IsUserNameChange { get; init; } = true;
+    public string? UserName { get; init; } // Boş olabilir
+    public bool IsPasswordChange { get; init; }
+    public string? Password { get; init; } // Boş olabilir
 }

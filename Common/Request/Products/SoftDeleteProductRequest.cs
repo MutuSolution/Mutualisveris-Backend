@@ -1,6 +1,6 @@
 ﻿namespace Common.Requests.Products;
 
-public class SoftDeleteProductRequest
+public record SoftDeleteProductRequest
 {
-    public int ProductId { get; set; }
+    public int ProductId { get; init; }
 }

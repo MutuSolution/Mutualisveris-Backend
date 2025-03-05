@@ -7,80 +7,98 @@ using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Servis konfigurasyonu ve IoC kayýtlarý
-builder.Services.AddCors(o =>
-    o.AddPolicy("Mutuapp cors", builder =>
-    {
-        builder
-        .AllowAnyOrigin()
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    }
-    ));
+/*** 1) Servis Konfigürasyonu ***/
+var configuration = builder.Configuration;
+var environment = builder.Environment;
+
+// Güvenlik
+builder.Services.AddCors(o => o.AddPolicy("DevelopmentCors", policy =>
+    policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
+// Localization
 builder.Services.AddCustomLocalization();
-builder.Services.AddControllers();
-builder.Services.AddDatabase(builder.Configuration);
-builder.Services.AddIdentitySettings();
-builder.Services.AddApplicationServices();
 
-// Kimlik doðrulama servislerini ekliyoruz (JWT).
-builder.Services.AddJwtAuthentication(
-    builder.Services.GetApplicationSettings(builder.Configuration)
-);
-
-// Identity, Infrastructure vb. kayýtlar
+// Database & Identity
+builder.Services.AddDatabase(configuration);
 builder.Services.AddIdentityServices();
+builder.Services.AddIdentitySettings();
+
+// Uygulama Katmaný
+builder.Services.AddApplicationServices();
 builder.Services.AddProductService();
 builder.Services.AddCategoryService();
+
+// Altyapý Servisleri
 builder.Services.AddInfrastructureDependencies();
 builder.Services.AddEmailService();
 
-// Swagger ve Rate Limit
+// Kimlik Doðrulama
+var appSettings = builder.Services.GetApplicationSettings(configuration);
+builder.Services.AddJwtAuthentication(appSettings);
+
+// API Konfigürasyonu
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.RegisterSwagger();
+
+// Swagger (Sadece Development)
+if (environment.IsDevelopment())
+{
+    builder.Services.RegisterSwagger();
+}
+
+// Rate Limiting
 builder.Services.AddMemoryCache();
 builder.Services.ConfigureRateLimitingOptions();
 
-// HttpContextAccessor ve diðer küçük servisler
+// Yardýmcý Servisler
 builder.Services.AddHttpContextAccessor();
 
-// 2) Middleware pipeline'ý oluþturma
+/*** 2) Middleware Pipeline ***/
 var app = builder.Build();
 
-// Örnek: Veritabaný seed iþlemi
+// Veritabaný Initialization
 app.SeedDatabase();
 
-if (app.Environment.IsDevelopment())
+// Global Hata Yönetimi (Ýlk middleware olarak)
+app.UseMiddleware<ErrorHandlingMiddleware>();
+
+// Geliþtirme Araçlarý
+if (environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("DevelopmentCors");
+}
+else // Production Ayarlarý
+{
+    app.UseHsts();
+    app.UseHttpsRedirection();
+
+    // Production CORS Politikasý (Örnek - Kendi domainlerinizle güncelleyin)
+    app.UseCors(policy => policy
+        .WithOrigins("" +
+        "https://mutualisveris.com",
+        "https://api.mutualisveris.com",
+        "http://localhost:3000",
+        "https://localhost:3000"
+        )
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        .AllowCredentials());
 }
 
-// HTTPS yönlendirme (isteðe baðlý)
-app.UseHttpsRedirection();
+// Localization
+app.UseRequestLocalization(app.Services
+    .GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
 
-// CORS
-app.UseCors("Mutuapp cors");
-
-// Yerelleþtirme (Localizasyon)
-app.UseRequestLocalization(
-    app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value
-);
-
-// Rate limiting
+// Rate Limiting
 app.UseIpRateLimiting();
 
-// !!! Kimlik doðrulama iþlemlerinin Authorization’dan önce devreye girmesi için
+// Auth Pipeline
 app.UseAuthentication();
-
-// Rol bazlý/Politika bazlý yetkilendirme
 app.UseAuthorization();
 
-// Global hata yakalama (Custom middleware)
-app.UseMiddleware<ErrorHandlingMiddleware>();
-
-// Controller'larý eþle
+// Routing
 app.MapControllers();
 
-// Uygulamayý çalýþtýr
 app.Run();
