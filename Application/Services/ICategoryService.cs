@@ -8,11 +8,11 @@ namespace Application.Services;
 
 public interface ICategoryService
 {
-    Task<IResponseWrapper> CreateCategoryAsync(CreateCategoryRequest request);
-    Task<IResponseWrapper> GetCategoryByIdAsync(int id);
-    Task<IResponseWrapper> UpdateCategoryAsync(UpdateCategoryRequest request);
-    Task<IResponseWrapper> SoftDeleteCategory(int id);
-    Task<IResponseWrapper> DeleteCategoryAsync(int id);
-    Task<PaginationResult<Category>> GetPagedCategoriesAsync(CategoryParameters parameters);
+    Task<IResponseWrapper<CategoryResponse>> CreateCategoryAsync(CreateCategoryRequest request);
+    Task<IResponseWrapper<CategoryResponse>> UpdateCategoryAsync(UpdateCategoryRequest request);
+    Task<IResponseWrapper<CategoryResponse>> SoftDeleteCategory(int id);
+    Task<IResponseWrapper<CategoryResponse>> DeleteCategoryAsync(int id);
+    Task<IResponseWrapper<CategoryResponse>> GetCategoryByIdAsync(int id);
+    Task<IResponseWrapper<PaginationResult<CategoryResponse>>> GetCategoriesAsync(CategoryParameters parameters);
 
 }

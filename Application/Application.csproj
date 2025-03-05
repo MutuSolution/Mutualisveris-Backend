@@ -7,11 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Features\Categories\Queries\**" />
     <Compile Remove="Features\Categories\Validators\**" />
-    <EmbeddedResource Remove="Features\Categories\Queries\**" />
     <EmbeddedResource Remove="Features\Categories\Validators\**" />
-    <None Remove="Features\Categories\Queries\**" />
     <None Remove="Features\Categories\Validators\**" />
   </ItemGroup>
 

@@ -3,6 +3,7 @@ using Application.Features.Identity.Users.Commands;
 using Common.Authorization;
 using Common.Requests.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Attributes;
 
@@ -11,7 +12,6 @@ namespace WebApi.Controllers.Identity;
 [Route("[controller]")]
 public class AuthController : MyBaseController<AuthController>
 {
-
     [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> GetTokenAsync([FromBody] TokenRequest tokenRequest)
