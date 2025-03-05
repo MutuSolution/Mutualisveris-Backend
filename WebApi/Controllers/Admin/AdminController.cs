@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApi.Attributes;
 
-namespace WebApi.Controllers;
+namespace WebApi.Controllers.Admin;
 
 [Route("[controller]")]
 [ApiController]
