@@ -7,17 +7,20 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
 {
     public CreateProductRequestValidator()
     {
-        RuleFor(x => x.Title)
+        RuleFor(x => x.Name)
       .NotEmpty();
-
-        RuleFor(x => x.Url)
-        .NotEmpty();
-
-        RuleFor(x => x.UserName)
-        .NotEmpty();
 
         RuleFor(x => x.Description)
         .NotEmpty();
+
+        RuleFor(x => x.Price)
+        .NotEmpty();
+
+        RuleFor(x => x.CategoryId)
+        .NotEmpty();
+
+        RuleFor(x => x.SKU)
+      .NotEmpty();
 
     }
 }

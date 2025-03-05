@@ -1,7 +1,6 @@
-﻿using Application.Extensions;
-using Application.Services;
+﻿using Application.Services;
 using Application.Services.Identity;
-using Common.Requests.Product.Report;
+using AutoMapper;
 using Common.Requests.Products;
 using Common.Responses.Pagination;
 using Common.Responses.Products;
@@ -16,373 +15,92 @@ public class ProductService : IProductService
 {
     private readonly ApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IMapper _mapper;
 
-    public ProductService(ApplicationDbContext context, ICurrentUserService currentUserService)
+    public ProductService(ApplicationDbContext context, ICurrentUserService currentUserService, IMapper mapper)
     {
         _context = context;
         _currentUserService = currentUserService;
+        _mapper = mapper;
     }
 
-    public async Task<ProductReport> ReportProductAsync(ProductReport productReport)
+    public async Task<IResponseWrapper<ProductResponse>> CreateProductAsync(CreateProductRequest request)
     {
-        await _context.ProductReports.AddAsync(productReport);
-        await _context.SaveChangesAsync();
-        return productReport;
-    }
-    public async Task<Product> CreateProductAsync(Product product)
-    {
-        var productInDb = await _context.Products.FirstOrDefaultAsync(x => x.Name == product.Name);
-        if (productInDb != null)
+        if (request == null)
+            return await ResponseWrapper<ProductResponse>.FailAsync("İstek bilgisi boş olamaz.");
+        if (string.IsNullOrWhiteSpace(request.Name))
+            return await ResponseWrapper<ProductResponse>.FailAsync("Ürün adı gereklidir.");
+        if (string.IsNullOrWhiteSpace(request.Description))
+            return await ResponseWrapper<ProductResponse>.FailAsync("Ürün açıklaması gereklidir.");
+
+        var categoryInDb = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.CategoryId);
+        if (categoryInDb == null)
+            return await ResponseWrapper<ProductResponse>.FailAsync("Geçersiz kategori.");
+
+        var existingProduct = await _context.Products
+                .FirstOrDefaultAsync(x => x.Name.ToLower() == request.Name.ToLower());
+        if (existingProduct != null)
+            return await ResponseWrapper<ProductResponse>.FailAsync("[ML63] Ürün zaten var.");
+
+        var newProduct = new Product
         {
-            var isReportedProduct = await _context.ProductReports
-                .FirstOrDefaultAsync(x => x.ProductId == productInDb.Id && x.IsChecked);
-            if (isReportedProduct != null)
-            {
-                throw new InvalidOperationException("[ML116] Product is not allowed.");
-            }
-        }
-        await _context.Products.AddAsync(product);
-        await _context.SaveChangesAsync();
-        return product;
-    }
-
-    public async Task<int> DeleteProductAsync(ProductResponse productResponse)
-    {
-        var product = await _context.Products.FindAsync(productResponse.Id);
-        if (product == null)
-        {
-            throw new ArgumentException("[ML117] Product not found.");
-        }
-        _context.Products.Remove(product);
-        await _context.SaveChangesAsync();
-        return product.Id;
-    }
-
-    public async Task<ProductResponse> GetProductByIdAsync(int id)
-    {
-        var productInDb = await _context.Products
-            .Where(product => product.Id == id).Select(product => new ProductResponse
-            (
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.SKU,
-                product.IsPublic,
-                product.IsDeleted,
-                product.LikeCount,
-                product.CreatedAt,
-                product.UpdatedAt,
-                product.Category.Name,
-                product.Images.Select(img => img.ImageUrl).ToList(),
-                product.OrderItems.Count,
-                false
-            ))
-            .FirstOrDefaultAsync();
-        return productInDb;
-    }
-
-    public async Task<List<ProductResponse>> GetProductListAsync()
-    {
-        var likedProductIds = _context.Likes
-       .Where(x => x.UserName == _currentUserService.UserName)
-       .Select(x => x.ProductId)
-       .ToHashSet();
-
-        return await _context.Products.Select(product => new ProductResponse
-            (
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.SKU,
-                product.IsPublic,
-                product.IsDeleted,
-                product.LikeCount,
-                product.CreatedAt,
-                product.UpdatedAt,
-                product.Category.Name,
-                product.Images.Select(img => img.ImageUrl).ToList(),
-                product.OrderItems.Count,
-                false
-            )).ToListAsync();
-    }
-    public async Task<List<Product>> GetHomeProductListAsync()
-    {
-        return await _context.Products
-            .Where(x => (x.IsPublic == true) && (x.IsDeleted == false))
-            .OrderByDescending(x => x.LikeCount)
-            .Take(25)
-            .ToListAsync();
-    }
-    public async Task<List<Product>> GetPublicProductWithUsernameAsync(string userName)
-    {
-        if (string.IsNullOrEmpty(userName))
-            return new List<Product>();
-        return await _context.Products
-            .Where(x =>
-            (x.IsPublic == true) &&
-            (x.IsDeleted == false) &&
-            (x.Name.ToLower() == userName.ToLower()))
-            .OrderByDescending(x => x.LikeCount)
-            .Take(25)
-            .ToListAsync();
-    }
-    public async Task<Product> UpdateProductAsync(UpdateProductRequest productResponse)
-    {
-        var product = await _context.Products.FindAsync(productResponse.Id);
-        if (product == null)
-        {
-            throw new ArgumentException("[ML118] Product not found.");
-        }
-
-        product.Name = productResponse.Title;
-        product.Description = productResponse.Description;
-        product.IsPublic = productResponse.IsPublic;
-        product.IsDeleted = productResponse.IsDeleted;
-
-        _context.Products.Update(product);
-        await _context.SaveChangesAsync();
-        return product;
-    }
-
-    public async Task<PaginationResult<ProductResponse>> GetPagedProductsAsync(ProductParameters parameters)
-    {
-        var likedProductIds = _context.Likes
-    .Where(x => x.UserName == _currentUserService.UserName).Select(x => x.ProductId).ToHashSet();
-        var searhTerm = CleanSearchTerm(parameters.SearchTerm);
-        var query = _context.Set<Product>().AsQueryable()
-            .Where(x =>
-                // Filtering
-                (x.IsPublic == parameters.IsPublic) &&
-                (x.LikeCount >= parameters.MinLikeCount) &&
-                (x.IsDeleted == parameters.IsDeleted) &&
-                (string.IsNullOrEmpty(searhTerm) ||
-                // Searching with case-insensitive comparison
-                x.Name.ToLower().Contains(searhTerm.ToLower()) ||
-                x.Description.ToLower().Contains(searhTerm.ToLower())))
-            .SortById(parameters.OrderBy);
-
-        var totalCount = await query.CountAsync();
-        var totalPage = totalCount > 0 ? (int)Math.Ceiling((double)totalCount / parameters.ItemsPerPage) : 0;
-        if (totalCount == 0) parameters.ItemsPerPage = 0;
-
-        var items = await query
-                .Skip(parameters.Skip)
-                .Take(parameters.ItemsPerPage)
-                 .Select(product => new ProductResponse
-            (
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.SKU,
-                product.IsPublic,
-                product.IsDeleted,
-                product.LikeCount,
-                product.CreatedAt,
-                product.UpdatedAt,
-                product.Category.Name,
-                product.Images.Select(img => img.ImageUrl).ToList(),
-                product.OrderItems.Count,
-                false
-            ))
-                .ToListAsync();
-
-        return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
-    }
-
-    public async Task<PaginationResult<ProductResponse>> GetPagedProductsByUserNameAsync(ProductsByUserNameParameters parameters)
-    {
-        var likedProductIds = _context.Likes
-     .Where(x => x.UserName == _currentUserService.UserName).Select(x => x.ProductId).ToHashSet();
-        var searhTerm = CleanSearchTerm(parameters.SearchTerm);
-
-        var query = _context.Set<Product>().AsQueryable()
-    .Where(x =>
-        // Filtering
-        (string.IsNullOrEmpty(parameters.IsPublic) ||
-        (parameters.IsPublic.ToLower() == "true" && x.IsPublic == true) ||
-        (parameters.IsPublic.ToLower() == "false" && x.IsPublic == false)) &&
-        (x.Name == parameters.UserName) &&
-        (x.LikeCount >= parameters.MinLikeCount) &&
-        (x.IsDeleted == parameters.IsDeleted) &&
-        (string.IsNullOrEmpty(searhTerm) ||
-        // Searching with case-insensitive comparison
-        x.Name.ToLower().Contains(searhTerm.ToLower()) ||
-        x.Description.ToLower().Contains(searhTerm.ToLower())));
-
-        query = query.SortById(parameters.OrderBy);
-
-        var totalCount = await query.CountAsync();
-        var totalPage = totalCount > 0 ?
-            (int)Math.Ceiling((double)totalCount / parameters.ItemsPerPage) : 0;
-        if (totalCount == 0) parameters.ItemsPerPage = 0;
-
-        var items = await query
-                .Skip(parameters.Skip)
-                .Take(parameters.ItemsPerPage)
-                 .Select(product => new ProductResponse
-            (
-                product.Id,
-                product.Name,
-                product.Description,
-                product.Price,
-                product.StockQuantity,
-                product.SKU,
-                product.IsPublic,
-                product.IsDeleted,
-                product.LikeCount,
-                product.CreatedAt,
-                product.UpdatedAt,
-                product.Category.Name,
-                product.Images.Select(img => img.ImageUrl).ToList(),
-                product.OrderItems.Count,
-                false
-            ))
-                .ToListAsync();
-
-        return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
-    }
-
-
-
-    public async Task<PaginationResult<ProductResponse>> GetPagedLikesByUserNameAsync(LikesByUserNameParameters parameters)
-    {
-        var likedProductIds = _context.Likes
-       .Where(x => x.UserName == _currentUserService.UserName).Select(x => x.ProductId).ToHashSet();
-        var searhTerm = CleanSearchTerm(parameters.SearchTerm);
-
-        var query = _context.Set<Like>().Include(l => l.Product).AsQueryable()
-            .Where(x =>
-                // Filtering
-                (x.UserName == parameters.UserName) &&
-                (string.IsNullOrEmpty(searhTerm) ||
-                // Searching with case-insensitive comparison
-                x.UserName.ToLower().Contains(searhTerm.ToLower())
-              ));
-
-        query = query.SortById(parameters.OrderBy);
-
-        var totalCount = await query.CountAsync();
-        var totalPage = totalCount > 0 ?
-            (int)Math.Ceiling((double)totalCount / parameters.ItemsPerPage) : 0;
-        if (totalCount == 0) parameters.ItemsPerPage = 0;
-
-        var items = await query
-                .Skip(parameters.Skip)
-                .Take(parameters.ItemsPerPage)
-                 .Select(like => new ProductResponse
-            (
-                like.Product.Id,
-                like.Product.Name,
-                like.Product.Description,
-                like.Product.Price,
-                like.Product.StockQuantity,
-                like.Product.SKU,
-                like.Product.IsPublic,
-                like.Product.IsDeleted,
-                like.Product.LikeCount,
-                like.Product.CreatedAt,
-                like.Product.UpdatedAt,
-                like.Product.Category.Name,
-                like.Product.Images.Select(img => img.ImageUrl).ToList(),
-                like.Product.OrderItems.Count,
-                false
-            ))
-                .ToListAsync();
-
-        return new PaginationResult<ProductResponse>(items, totalCount, totalPage, parameters.Page, parameters.ItemsPerPage);
-    }
-
-    public async Task<IResponseWrapper> SoftDeleteProduct(SoftDeleteProductRequest request)
-    {
-        var productInDb = _context.Products.Find(request.ProductId);
-        if (productInDb is null)
-            return await ResponseWrapper<string>.FailAsync("[ML63] Ürün bulunamadı.");
-
-        productInDb.IsDeleted = true;
-        _context.Products.Update(productInDb);
-        await _context.SaveChangesAsync();
-        return ResponseWrapper<string>.Success("[ML74] Ürün başarıyla silindi.");
-    }
-
-    public async Task<IResponseWrapper> LikeProductAsync(LikeProductRequest request, CancellationToken cancellationToken)
-    {
-        var isLiked = await _context.Likes.FirstOrDefaultAsync(x => x.ProductId == request.ProductId && x.UserName == _currentUserService.UserName);
-        var product = await _context.Products.FirstOrDefaultAsync(x => x.Id == request.ProductId);
-
-        if (product == null)
-            return await ResponseWrapper.FailAsync("[ML82] Product does not found.");
-
-        if (isLiked != null)
-        {
-            _context.Likes.Remove(isLiked);
-            await _context.SaveChangesAsync(cancellationToken);
-            return ResponseWrapper.Success("[ML83] Product successfully unliked.");
-        }
-
-
-        var like = new Like
-        {
-            UserName = _currentUserService.UserName,
-            ProductId = request.ProductId,
-            CreatedAt = DateTime.UtcNow
+            Name = request.Name,
+            Description = request.Description,
+            Price = request.Price,
+            StockQuantity = request.StockQuantity,
+            SKU = request.SKU,
+            CategoryId = request.CategoryId,
+            IsPublic = request.IsPublic
         };
 
-        _context.Likes.Add(like);
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return ResponseWrapper.Success("[ML79] Product successfully liked.");
-
-    }
-
-    public async Task<List<ProductReportResponse>> GetProductReportsAsync()
-    {
-        var productReports = await _context.ProductReports
-            .Where(x => x.IsChecked == false)
-            .OrderByDescending(report => report.Id)
-            .ToListAsync();
-
-        return productReports.Select(report => new ProductReportResponse
-        (
-            report.Id,
-            report.ProductId,
-            report.Message,
-            report.IsChecked
-        )).ToList();
-    }
-
-
-
-    public string CleanSearchTerm(string searchTerm)
-    {
-        if (string.IsNullOrEmpty(searchTerm))
+        try
         {
-            return searchTerm;
+            await _context.Products.AddAsync(newProduct);
+            var saveResult = await _context.SaveChangesAsync();
+            if (saveResult > 0)
+            {
+                var createdProduct = await _context.Products
+                    .Include(c => c.CategoryId)
+                    .FirstOrDefaultAsync(c => c.Id == newProduct.Id);
+                var mappedProduct = _mapper.Map<ProductResponse>(createdProduct);
+                return await ResponseWrapper<ProductResponse>
+                    .SuccessAsync(mappedProduct, "[ML65] Ürün başarıyla eklendi.");
+            }
+            else
+            {
+                return await ResponseWrapper<ProductResponse>
+                    .FailAsync("Ürün kaydedilirken bir hata oluştu.");
+            }
         }
-
-        return searchTerm.Replace("#", "");
+        catch (Exception ex)
+        {
+            var message = "Ürün oluşturulurken bir hata meydana geldi: " + ex.Message;
+            return await ResponseWrapper<ProductResponse>.FailAsync(message);
+        }
     }
 
-    public async Task<ProductReportResponse> UpdateReportProductAsync(ProductReportIsCheckedRequest request)
+    public Task<IResponseWrapper<ProductResponse>> DeleteProductAsync(int id)
     {
-        var productReport = await _context.ProductReports.FirstOrDefaultAsync(x => x.Id == request.ReportId);
-        if (productReport == null)
-        {
-            return new ProductReportResponse(0, 0, string.Empty, false);
-        }
-        productReport.IsChecked = request.IsChecked;
-        _context.ProductReports.Update(productReport);
-        await _context.SaveChangesAsync();
-        return new ProductReportResponse(
-            productReport.Id,
-            productReport.ProductId,
-            productReport.Message,
-            productReport.IsChecked);
+        throw new NotImplementedException();
+    }
+
+    public Task<IResponseWrapper<ProductResponse>> GetProductByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResponseWrapper<PaginationResult<ProductResponse>>> GetProductsAsync(ProductParameters parameters)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResponseWrapper<ProductResponse>> SoftDeleteProductAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IResponseWrapper<ProductResponse>> UpdateProductAsync(UpdateProductRequest request)
+    {
+        throw new NotImplementedException();
     }
 }
-

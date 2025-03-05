@@ -1,7 +1,7 @@
 ﻿using Domain;
 using Infrastructure.DbConfig;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 internal class CategoryEntityConfig : IEntityTypeConfiguration<Category>
 {

@@ -7,7 +7,7 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(x => x.CreateProductRequest)
+        RuleFor(x => x.CreateProduct)
             .SetValidator(new CreateProductRequestValidator());
     }
 }

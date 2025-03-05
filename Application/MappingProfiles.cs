@@ -15,11 +15,8 @@ public class MappingProfiles : Profile
         CreateMap<Product, ProductResponse>().ReverseMap();
         CreateMap<Category, CategoryResponse>().ReverseMap();
         CreateMap<Like, ProductResponse>().ReverseMap();
-        CreateMap<Like, LikeResponse>().ReverseMap();
-        CreateMap<ProductReport, ProductReportResponse>().ReverseMap();
 
         //requests
-        CreateMap<ProductReportRequest, ProductReport>();
         CreateMap<CreateProductRequest, Product>();
         CreateMap<CreateCategoryRequest, Category>();
 

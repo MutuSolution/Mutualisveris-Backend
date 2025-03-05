@@ -40,7 +40,8 @@ public class ApplicationDbSeeeder
 
     private async Task SeedAdminUserAsync()
     {
-        string adminUserName = AppCredentials.Email[..AppCredentials.Email.IndexOf('@')].ToLowerInvariant();
+        string adminUserName = AppCredentials
+            .Email[..AppCredentials.Email.IndexOf('@')].ToLowerInvariant();
         var adminUser = new ApplicationUser
         {
             FirstName = "Yunus",

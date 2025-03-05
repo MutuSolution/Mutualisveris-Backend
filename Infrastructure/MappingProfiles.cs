@@ -31,12 +31,6 @@ namespace Infrastructure
             // Ürün Resim Mapping (Varsayalım DTO'su var)
             CreateMap<ProductImage, ProductImageResponse>();
 
-            // Like Mapping (Örnek: Eğer ürün üzerinden like bilgisi verilecekse)
-            CreateMap<Product, LikeResponse>();
-
-            // Product Report Mapping
-            CreateMap<ProductReport, ProductReportResponse>().ReverseMap();
-
             // Category Mapping
             CreateMap<Category, CategoryResponse>()
              .ForMember(dest => dest.IsVisible, opt => opt.MapFrom(src => src.IsVisible))
