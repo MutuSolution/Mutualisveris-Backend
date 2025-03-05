@@ -91,22 +91,94 @@ namespace Infrastructure.Services.Identity
         {
             var message = new MimeMessage();
 
-            // Gönderici adresi konfigürasyon üzerinden alınabilir. (Varsayılan değeri belirleniyor.)
+            // Gönderici adresini konfigürasyondan alıyoruz.
             var fromAddress = _configuration["EmailFromAddress"] ?? "confirm@mutuapp.com";
-
-            message.From.Add(MailboxAddress.Parse(fromAddress));
+            // Gönderici adını da ekleyerek daha profesyonel hale getiriyoruz.
+            message.From.Add(new MailboxAddress("Mutualışveriş", fromAddress));
             message.To.Add(MailboxAddress.Parse(recipientEmail));
-            message.Subject = "Mutualisveris Email Doğrulama";
+            message.Subject = "Mutualışveriş Email Doğrulama";
 
             var bodyBuilder = new BodyBuilder
             {
-                HtmlBody = $"<p>Mutualışveriş'e Hoşgeldiniz, doğrulama kodunuz: <strong>{token}</strong></p>",
-                TextBody = $"Mutualışveriş'e Hoşgeldiniz, doğrulama kodunuz: {token}"
+                HtmlBody = $@"
+<html>
+  <head>
+    <style>
+      body {{
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+      }}
+      .container {{
+          max-width: 600px;
+          margin: 50px auto;
+          background-color: #ffffff;
+          border-radius: 8px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          overflow: hidden;
+      }}
+      .header {{
+          background-color: #4CAF50;
+          color: #ffffff;
+          padding: 20px;
+          text-align: center;
+      }}
+      .header h1 {{
+          margin: 0;
+          font-size: 24px;
+      }}
+      .content {{
+          padding: 30px;
+          text-align: center;
+      }}
+      .content p {{
+          font-size: 16px;
+          line-height: 1.5;
+          color: #333333;
+      }}
+      .token {{
+          font-size: 22px;
+          font-weight: bold;
+          color: #4CAF50;
+          background-color: #f0f0f0;
+          padding: 12px 25px;
+          display: inline-block;
+          margin: 20px 0;
+          border-radius: 4px;
+      }}
+      .footer {{
+          background-color: #f4f4f4;
+          color: #777777;
+          text-align: center;
+          padding: 10px;
+          font-size: 12px;
+      }}
+    </style>
+  </head>
+  <body>
+    <div class=""container"">
+      <div class=""header"">
+        <h1>Mutualışveriş</h1>
+      </div>
+      <div class=""content"">
+        <p>Hoş geldiniz! Lütfen aşağıdaki doğrulama kodunu kullanarak e-posta adresinizi onaylayın.</p>
+        <div class=""token"">{token}</div>
+        <p>Eğer bu isteği siz başlatmadıysanız, lütfen bu e-postayı görmezden gelin.</p>
+      </div>
+      <div class=""footer"">
+        <p>&copy; {DateTime.UtcNow.Year} Mutualışveriş. Tüm hakları saklıdır.</p>
+      </div>
+    </div>
+  </body>
+</html>",
+                TextBody = $"Mutualışveriş'e Hoş geldiniz! Doğrulama kodunuz: {token}. Eğer bu isteği siz başlatmadıysanız, lütfen bu e-postayı görmezden gelin."
             };
 
             message.Body = bodyBuilder.ToMessageBody();
             return message;
         }
+
 
         public async Task<IResponseWrapper> GetEmailConfirmAsync(EmailConfirmRequest emailConfirmRequest)
         {
