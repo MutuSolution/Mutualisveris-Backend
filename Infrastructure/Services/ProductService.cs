@@ -142,7 +142,6 @@ public class ProductService : IProductService
         product.Description = productResponse.Description;
         product.IsPublic = productResponse.IsPublic;
         product.IsDeleted = productResponse.IsDeleted;
-        product.LikeCount = productResponse.LikeCount;
 
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
@@ -321,7 +320,6 @@ public class ProductService : IProductService
 
         if (isLiked != null)
         {
-            product.LikeCount -= 1;
             _context.Likes.Remove(isLiked);
             await _context.SaveChangesAsync(cancellationToken);
             return ResponseWrapper.Success("[ML83] Product successfully unliked.");
@@ -336,7 +334,6 @@ public class ProductService : IProductService
         };
 
         _context.Likes.Add(like);
-        product.LikeCount += 1;
         await _context.SaveChangesAsync(cancellationToken);
 
         return ResponseWrapper.Success("[ML79] Product successfully liked.");

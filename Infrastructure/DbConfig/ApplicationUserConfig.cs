@@ -36,7 +36,7 @@ internal class IdentityUserRoleConfig : IEntityTypeConfiguration<IdentityUserRol
 {
     public void Configure(EntityTypeBuilder<IdentityUserRole<string>> builder) =>
         builder
-            .ToTable("UserRoles", SchemaNames.Security);
+        .ToTable("UserRoles", SchemaNames.Security);
 }
 
 internal class IdentityUserClaimConfig : IEntityTypeConfiguration<IdentityUserClaim<string>>

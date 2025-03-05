@@ -1,8 +1,11 @@
-﻿namespace Infrastructure.DbConfig;
-
-internal static class SchemaNames
+﻿namespace Infrastructure.DbConfig
 {
-    public static string Security = nameof(Security);
-    public static string PRODUCT = nameof(PRODUCT);
-    public static string CATEGORY = nameof(CATEGORY);
+    public static class SchemaNames
+    {
+        public const string Security = "Security";
+        public const string Catalog = "Catalog";
+        public const string Order = "Order";
+        public const string Cart = "Cart";
+        public const string User = "User";
+    }
 }

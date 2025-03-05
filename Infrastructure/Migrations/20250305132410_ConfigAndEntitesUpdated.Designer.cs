@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250301033954_UpdateOrderDeleteBehaviorDeep3")]
-    partial class UpdateOrderDeleteBehaviorDeep3
+    [Migration("20250305132410_ConfigAndEntitesUpdated")]
+    partial class ConfigAndEntitesUpdated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,13 +34,19 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Street")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -49,13 +55,15 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ZipCode")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Addresses");
+                    b.ToTable("Addresses", "User");
                 });
 
             modelBuilder.Entity("Domain.ApplicationRole", b =>
@@ -194,7 +202,7 @@ namespace Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", "Cart");
                 });
 
             modelBuilder.Entity("Domain.CartItem", b =>
@@ -220,7 +228,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", "Cart");
                 });
 
             modelBuilder.Entity("Domain.Category", b =>
@@ -232,19 +240,30 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("IsVisible")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("ParentCategoryId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Categories_Name");
+
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", "Catalog");
                 });
 
             modelBuilder.Entity("Domain.Like", b =>
@@ -274,7 +293,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("UserName")
                         .HasDatabaseName("IX_Likes_UserName");
 
-                    b.ToTable("Likes", "PRODUCT");
+                    b.ToTable("Likes", "Catalog");
                 });
 
             modelBuilder.Entity("Domain.Order", b =>
@@ -284,6 +303,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
@@ -299,9 +321,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", "Order");
                 });
 
             modelBuilder.Entity("Domain.OrderItem", b =>
@@ -330,7 +354,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", "Order");
                 });
 
             modelBuilder.Entity("Domain.Payment", b =>
@@ -361,7 +385,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", "Order");
                 });
 
             modelBuilder.Entity("Domain.Product", b =>
@@ -393,11 +417,6 @@ namespace Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
-
-                    b.Property<int>("LikeCount")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -436,7 +455,7 @@ namespace Infrastructure.Migrations
                     b.HasIndex("IsPublic", "IsDeleted")
                         .HasDatabaseName("IX_Products_Visibility");
 
-                    b.ToTable("Products", "PRODUCT");
+                    b.ToTable("Products", "Catalog");
                 });
 
             modelBuilder.Entity("Domain.ProductImage", b =>
@@ -448,10 +467,14 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("IsMain")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -460,7 +483,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", "Catalog");
                 });
 
             modelBuilder.Entity("Domain.ProductReport", b =>
@@ -483,12 +506,12 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
-                        .HasDatabaseName("IX_ProductReport_Id");
+                        .HasDatabaseName("IX_ProductReports_Id");
 
                     b.HasIndex("ProductId")
-                        .HasDatabaseName("IX_ProductId");
+                        .HasDatabaseName("IX_ProductReports_ProductId");
 
-                    b.ToTable("ProductReports", "PRODUCT");
+                    b.ToTable("ProductReports", "Catalog");
                 });
 
             modelBuilder.Entity("Infrastructure.Models.ApplicationRoleClaim", b =>
@@ -607,7 +630,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.ApplicationUser", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
@@ -616,7 +640,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.ApplicationUser", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("Domain.Cart", "UserId");
+                        .HasForeignKey("Domain.Cart", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("User");
                 });
@@ -632,7 +657,7 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Cart");
@@ -644,7 +669,8 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Category", "ParentCategory")
                         .WithMany("SubCategories")
-                        .HasForeignKey("ParentCategoryId");
+                        .HasForeignKey("ParentCategoryId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("ParentCategory");
                 });
@@ -662,9 +688,14 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Order", b =>
                 {
-                    b.HasOne("Domain.ApplicationUser", "User")
+                    b.HasOne("Domain.ApplicationUser", null)
                         .WithMany("Orders")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ApplicationUserId");
+
+                    b.HasOne("Domain.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("User");
                 });
@@ -674,13 +705,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.Product", "Product")
                         .WithMany("OrderItems")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");

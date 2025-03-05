@@ -39,8 +39,8 @@ namespace Infrastructure
 
             // Category Mapping
             CreateMap<Category, CategoryResponse>()
-             .ForMember(dest => dest.IsVisible, opt => opt.MapFrom(src => src.isVisible))
-             .ForMember(dest => dest.ParentCategoryName, opt => 
+             .ForMember(dest => dest.IsVisible, opt => opt.MapFrom(src => src.IsVisible))
+             .ForMember(dest => dest.ParentCategoryName, opt =>
              opt.MapFrom(src => src.ParentCategory != null ? src.ParentCategory.Name : string.Empty))
              .ForMember(dest => dest.ProductCount, opt =>
              opt.MapFrom(src => src.Products != null ? src.Products.Count : 0))

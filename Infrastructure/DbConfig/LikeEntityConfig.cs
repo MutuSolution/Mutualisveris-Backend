@@ -2,19 +2,19 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.DbConfig;
-
-public class LikeEntityConfig : IEntityTypeConfiguration<Like>
+namespace Infrastructure.DbConfig
 {
-    public void Configure(EntityTypeBuilder<Like> builder)
+    internal class LikeEntityConfig : IEntityTypeConfiguration<Like>
     {
-        builder
-            .ToTable("Likes", SchemaNames.PRODUCT)
-            .HasIndex(e => e.Id)
-            .HasDatabaseName("IX_Likes_Id");
+        public void Configure(EntityTypeBuilder<Like> builder)
+        {
+            builder.ToTable("Likes", SchemaNames.Catalog);
 
-        builder
-            .HasIndex(e => e.UserName)
-            .HasDatabaseName("IX_Likes_UserName");
+            builder.HasIndex(e => e.Id)
+                .HasDatabaseName("IX_Likes_Id");
+
+            builder.HasIndex(e => e.UserName)
+                .HasDatabaseName("IX_Likes_UserName");
+        }
     }
 }

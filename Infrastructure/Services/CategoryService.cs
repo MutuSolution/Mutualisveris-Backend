@@ -50,7 +50,7 @@ namespace Infrastructure.Services
                 Name = request.Name,
                 ParentCategoryId = request.ParentCategoryId,
                 Description = request.Description,
-                isVisible = request.IsVisible
+                IsVisible = request.IsVisible
             };
 
             try
@@ -106,7 +106,7 @@ namespace Infrastructure.Services
             categoryInDb.Name = request.Name;
             categoryInDb.ParentCategoryId = request.ParentCategoryId;
             categoryInDb.Description = string.IsNullOrEmpty(request.Description) ? null : request.Description;
-            categoryInDb.isVisible = request.IsVisible;
+            categoryInDb.IsVisible = request.IsVisible;
 
             try
             {
@@ -193,7 +193,8 @@ namespace Infrastructure.Services
             }
             catch (Exception ex)
             {
-                return await ResponseWrapper<CategoryResponse>.FailAsync("Kategori getirilirken bir hata meydana geldi: " + ex.Message);
+                return await ResponseWrapper<CategoryResponse>
+                    .FailAsync("Kategori getirilirken bir hata meydana geldi: " + ex.Message);
             }
         }
 
@@ -210,7 +211,7 @@ namespace Infrastructure.Services
             }
 
             if (parameters.IsVisible.HasValue)
-                query = query.Where(x => x.isVisible == parameters.IsVisible.Value);
+                query = query.Where(x => x.IsVisible == parameters.IsVisible.Value);
 
             query = query.SortById(parameters.OrderBy);
 
@@ -240,7 +241,7 @@ namespace Infrastructure.Services
             if (categoryInDb == null)
                 return await ResponseWrapper<CategoryResponse>.FailAsync("[ML63] Kategori bulunamadı.");
 
-            categoryInDb.isVisible = false;
+            categoryInDb.IsVisible = false;
             await SoftDeleteDescendants(categoryInDb.Id);
 
             try
@@ -274,7 +275,7 @@ namespace Infrastructure.Services
 
             foreach (var subCategory in subCategories)
             {
-                subCategory.isVisible = false;
+                subCategory.IsVisible = false;
                 await SoftDeleteDescendants(subCategory.Id);
             }
         }
