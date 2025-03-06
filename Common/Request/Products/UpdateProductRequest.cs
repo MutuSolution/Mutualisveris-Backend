@@ -1,13 +1,14 @@
 ﻿namespace Common.Requests.Products;
 
 public record UpdateProductRequest
-(
-    int Id,
-    string Name,
-    string Description,
-    decimal Price,
-    int StockQuantity,
-    string SKU,
-    bool IsPublic,
-    bool IsDeleted
-);
+{
+    public int Id { get; init; }
+    public string Name { get; init; }
+    public string Description { get; init; }
+    public decimal Price { get; init; }
+    public int StockQuantity { get; init; }
+    public int CategoryId { get; init; }
+    public string SKU { get; init; }
+    public bool IsPublic { get; init; }
+}
+ 

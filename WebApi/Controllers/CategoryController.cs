@@ -14,7 +14,7 @@ public class CategoryController : MyBaseController<CategoryController>
 {
     [HttpPost]
     [MustHavePermission(AppFeature.Categories, AppAction.Create)]
-    public async Task<IActionResult> CreateCategoryAsync([FromBody] CreateCategoryRequest createCategory)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest createCategory)
     {
         var response = await MediatorSender
             .Send(new CreateCategoryCommand { CreateCategory = createCategory });
@@ -24,7 +24,7 @@ public class CategoryController : MyBaseController<CategoryController>
 
     [HttpPut]
     [MustHavePermission(AppFeature.Categories, AppAction.Update)]
-    public async Task<IActionResult> UpdateCategoryAsync([FromBody] UpdateCategoryRequest updateCategory)
+    public async Task<IActionResult> UpdateCategory([FromBody] UpdateCategoryRequest updateCategory)
     {
         var response = await MediatorSender
             .Send(new UpdateCategoryCommand { UpdateCategory = updateCategory });
@@ -34,7 +34,7 @@ public class CategoryController : MyBaseController<CategoryController>
 
     [HttpPut("hard-delete")]
     [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
-    public async Task<IActionResult> HardDeleteCategoryAsync(int id)
+    public async Task<IActionResult> HardDeleteCategory(int id)
     {
         var response = await MediatorSender
            .Send(new DeleteCategoryCommand { CategoryId = id });
@@ -44,7 +44,7 @@ public class CategoryController : MyBaseController<CategoryController>
 
     [HttpPut("soft-delete")]
     [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
-    public async Task<IActionResult> SoftDeleteCategoryAsync(int id)
+    public async Task<IActionResult> SoftDeleteCategory(int id)
     {
         var response = await MediatorSender
            .Send(new SoftDeleteCategoryCommand { CategoryId = id });
@@ -54,7 +54,7 @@ public class CategoryController : MyBaseController<CategoryController>
 
     [HttpGet("id/{id}")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetCategoryByIdAsync(int id)
+    public async Task<IActionResult> GetCategoryById(int id)
     {
         var response = await MediatorSender
            .Send(new GetCategoryByIdQuery { CategoryID = id });
@@ -64,7 +64,7 @@ public class CategoryController : MyBaseController<CategoryController>
 
     [HttpGet]
     [AllowAnonymous]
-    public async Task<IActionResult> GetCategoriesAsync([FromQuery] CategoryParameters parameters)
+    public async Task<IActionResult> GetCategories([FromQuery] CategoryParameters parameters)
     {
         var query = new GetCategoriesQuery { Parameters = parameters };
         var result = await MediatorSender.Send(query);

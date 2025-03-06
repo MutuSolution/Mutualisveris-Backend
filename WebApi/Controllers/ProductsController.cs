@@ -19,15 +19,15 @@ public class ProductsController : MyBaseController<ProductsController>
         return BadRequest(response);
     }
 
-    //[HttpPut]
-    //[MustHavePermission(AppFeature.Products, AppAction.Update)]
-    //public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequest updateProduct)
-    //{
-    //    var response = await MediatorSender
-    //        .Send(new UpdateProductCommand { UpdateProductRequest = updateProduct });
-    //    if (response.IsSuccessful) return Ok(response);
-    //    return BadRequest(response);
-    //}
+    [HttpPut]
+    [MustHavePermission(AppFeature.Products, AppAction.Update)]
+    public async Task<IActionResult> UpdateProduct([FromBody] UpdateProductRequest updateProduct)
+    {
+        var response = await MediatorSender
+            .Send(new UpdateProductCommand { UpdateProduct = updateProduct });
+        if (response.IsSuccessful) return Ok(response);
+        return BadRequest(response);
+    }
 
 
 

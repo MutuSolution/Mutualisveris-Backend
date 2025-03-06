@@ -20,5 +20,8 @@ public class MappingProfiles : Profile
         CreateMap<CreateProductRequest, Product>();
         CreateMap<CreateCategoryRequest, Category>();
 
+        CreateMap<UpdateCategoryRequest, Category>();
+        CreateMap<UpdateProductRequest, Product>();
+
     }
 }
