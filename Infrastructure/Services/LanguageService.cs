@@ -7,7 +7,7 @@ public class SharedResource
 {
 
 }
-public class LanguageService
+public sealed class LanguageService
 {
     private readonly IStringLocalizer _localizer;
 

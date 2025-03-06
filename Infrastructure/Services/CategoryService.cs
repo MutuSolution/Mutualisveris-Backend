@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
-    public class CategoryService : ICategoryService
+    public sealed class CategoryService : ICategoryService
     {
         private readonly ApplicationDbContext _context;
         private readonly ICurrentUserService _currentUserService;

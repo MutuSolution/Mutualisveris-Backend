@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
-public class ProductService : IProductService
+public sealed class ProductService : IProductService
 {
     private readonly ApplicationDbContext _context;
     private readonly ICurrentUserService _currentUserService;

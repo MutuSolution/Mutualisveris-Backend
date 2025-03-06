@@ -14,7 +14,7 @@ using System.Text;
 
 namespace Infrastructure.Services.Identity
 {
-    public class TokenService : ITokenService
+    public sealed class TokenService : ITokenService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
