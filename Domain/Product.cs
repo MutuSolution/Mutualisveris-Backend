@@ -7,10 +7,10 @@ public class Product
     public string Description { get; set; }
     public decimal Price { get; set; }
     public int StockQuantity { get; set; }
-    public string SKU { get; set; }
+    public string SKU { get; set; }  // Unique SKU
     public bool IsPublic { get; set; } = true;
     public bool IsDeleted { get; set; } = false;
-    public int LikeCount => Likes.Count;
+    public int LikeCount { get; set; }  // Veritabanında tutulacak
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
 

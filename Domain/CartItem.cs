@@ -1,8 +1,10 @@
 ﻿namespace Domain;
+
 public class CartItem
 {
     public int Id { get; set; }
     public int Quantity { get; set; }
+    public decimal UnitPrice { get; set; }  // Yeni ekleme
 
     // Relationships
     public int ProductId { get; set; }

@@ -1,10 +1,11 @@
-﻿using Application.Services;
+﻿using Application.Pipelines;
+using Application.Services;
 using Common.Responses.Wrappers;
 using MediatR;
 
 namespace Application.Features.Categories.Queries;
 
-public class GetCategoryByIdQuery : IRequest<IResponseWrapper>
+public class GetCategoryByIdQuery : IRequest<IResponseWrapper>, IValidateMe
 {
     public int CategoryID { get; set; }
 }

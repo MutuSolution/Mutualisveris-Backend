@@ -13,4 +13,5 @@ public interface IProductService
     Task<IResponseWrapper<ProductResponse>> DeleteProductAsync(int id);
     Task<IResponseWrapper<ProductResponse>> GetProductByIdAsync(int id);
     Task<IResponseWrapper<PaginationResult<ProductResponse>>> GetProductsAsync(ProductParameters parameters);
+    Task<string> DeleteProductAsync(IResponseWrapper<ProductResponse> productInDb);
 }

@@ -1,5 +1,4 @@
 ﻿namespace Domain;
-
 public class ProductReport
 {
     public int Id { get; set; }

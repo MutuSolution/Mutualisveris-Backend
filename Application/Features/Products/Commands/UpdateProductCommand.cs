@@ -2,7 +2,6 @@
 using Application.Services;
 using AutoMapper;
 using Common.Requests.Products;
-using Common.Responses.Products;
 using Common.Responses.Wrappers;
 using MediatR;
 

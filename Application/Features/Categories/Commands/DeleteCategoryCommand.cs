@@ -1,9 +1,10 @@
-﻿using Application.Services;
+﻿using Application.Pipelines;
+using Application.Services;
 using Common.Responses.Wrappers;
 using MediatR;
 
 namespace Application.Features.Categories.Commands;
-public class DeleteCategoryCommand : IRequest<IResponseWrapper>
+public class DeleteCategoryCommand : IRequest<IResponseWrapper>, IValidateMe
 {
     public int CategoryId { get; set; }
 }

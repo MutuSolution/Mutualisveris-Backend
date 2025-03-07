@@ -1,4 +1,5 @@
-﻿using Application.Services;
+﻿using Application.Pipelines;
+using Application.Services;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain.Responses;
@@ -6,7 +7,7 @@ using MediatR;
 
 namespace Application.Features.Categories.Queries
 {
-    public class GetCategoriesQuery : IRequest<IResponseWrapper<PaginationResult<CategoryResponse>>>
+    public class GetCategoriesQuery : IRequest<IResponseWrapper<PaginationResult<CategoryResponse>>>, IValidateMe
     {
         public CategoryParameters Parameters { get; set; } = new CategoryParameters();
     }

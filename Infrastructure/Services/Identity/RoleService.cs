@@ -6,7 +6,6 @@ using Common.Responses.Identity;
 using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
-using Infrastructure.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

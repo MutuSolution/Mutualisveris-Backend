@@ -10,4 +10,3 @@ public class Like
     // Navigation Property
     public Product Product { get; set; }
 }
-

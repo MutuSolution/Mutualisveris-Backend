@@ -194,7 +194,6 @@ public sealed class UserService : IUserService
             Email = request.Email,
             IsActive = true,
             UserName = username,
-            Role = "Basic",
             EmailConfirmed = false
         };
 

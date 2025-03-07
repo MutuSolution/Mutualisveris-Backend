@@ -11,4 +11,3 @@ public record UpdateProductRequest
     public string SKU { get; init; }
     public bool IsPublic { get; init; }
 }
- 

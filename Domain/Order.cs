@@ -12,6 +12,12 @@ public class Order
     public ApplicationUser User { get; set; }
     public List<OrderItem> OrderItems { get; set; } = new();
     public Payment Payment { get; set; }
+
+    // Addresses for order
+    public int? ShippingAddressId { get; set; }  // Yeni ekleme
+    public int? BillingAddressId { get; set; }   // Yeni ekleme
+    public Address ShippingAddress { get; set; }  // Yeni ekleme
+    public Address BillingAddress { get; set; }   // Yeni ekleme
 }
 
 public enum OrderStatus

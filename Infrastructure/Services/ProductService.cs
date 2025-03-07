@@ -40,7 +40,12 @@ public sealed class ProductService : IProductService
         var existingProduct = await _context.Products
                 .FirstOrDefaultAsync(x => x.Name.ToLower() == request.Name.ToLower());
         if (existingProduct != null)
-            return await ResponseWrapper<ProductResponse>.FailAsync("[ML63] Ürün zaten var.");
+            return await ResponseWrapper<ProductResponse>.FailAsync("Ürün zaten var.");
+
+        var existingSKU = await _context.Products
+        .FirstOrDefaultAsync(x => x.SKU.ToLower() == request.SKU.ToLower());
+        if (existingSKU != null)
+            return await ResponseWrapper<ProductResponse>.FailAsync("SKU zaten var.");
 
         var newProduct = new Product
         {
@@ -59,12 +64,9 @@ public sealed class ProductService : IProductService
             var saveResult = await _context.SaveChangesAsync();
             if (saveResult > 0)
             {
-                var createdProduct = await _context.Products
-                    .Include(c => c.CategoryId)
-                    .FirstOrDefaultAsync(c => c.Id == newProduct.Id);
-                var mappedProduct = _mapper.Map<ProductResponse>(createdProduct);
+                var mappedProduct = _mapper.Map<ProductResponse>(newProduct);
                 return await ResponseWrapper<ProductResponse>
-                    .SuccessAsync(mappedProduct, "[ML65] Ürün başarıyla eklendi.");
+                    .SuccessAsync(mappedProduct, "Ürün başarıyla eklendi.");
             }
             else
             {
@@ -80,6 +82,11 @@ public sealed class ProductService : IProductService
     }
 
     public Task<IResponseWrapper<ProductResponse>> DeleteProductAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<string> DeleteProductAsync(IResponseWrapper<ProductResponse> productInDb)
     {
         throw new NotImplementedException();
     }
