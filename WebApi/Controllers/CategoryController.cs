@@ -18,8 +18,7 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var response = await MediatorSender
             .Send(new CreateCategoryCommand { CreateCategory = createCategory });
-        if (response.IsSuccessful) return Ok(response);
-        return BadRequest(response);
+        return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
     [HttpPut]
@@ -28,8 +27,7 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var response = await MediatorSender
             .Send(new UpdateCategoryCommand { UpdateCategory = updateCategory });
-        if (response.IsSuccessful) return Ok(response);
-        return BadRequest(response);
+        return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
     [HttpPut("hard-delete")]
@@ -38,8 +36,7 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var response = await MediatorSender
            .Send(new DeleteCategoryCommand { CategoryId = id });
-        if (response.IsSuccessful) return Ok(response);
-        return BadRequest(response);
+        return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
     [HttpPut("soft-delete")]
@@ -48,8 +45,7 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var response = await MediatorSender
            .Send(new SoftDeleteCategoryCommand { CategoryId = id });
-        if (response.IsSuccessful) return Ok(response);
-        return BadRequest(response);
+        return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
     [HttpGet("id/{id}")]
@@ -58,8 +54,7 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var response = await MediatorSender
            .Send(new GetCategoryByIdQuery { CategoryID = id });
-        if (response.IsSuccessful) return Ok(response);
-        return BadRequest(response);
+        return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
     [HttpGet]
@@ -68,7 +63,6 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var query = new GetCategoriesQuery { Parameters = parameters };
         var result = await MediatorSender.Send(query);
-        if (result.IsSuccessful) return Ok(result);
-        return NotFound(result);
+              return result.IsSuccessful ? Ok(result) : NotFound(result);
     }
 }

@@ -15,12 +15,9 @@ public class UpdateProductCommand : IRequest<IResponseWrapper>, IValidateMe
 public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, IResponseWrapper>
 {
     private readonly IProductService _productService;
-    private readonly IMapper _mapper;
-
-    public UpdateProductCommandHandler(IProductService productService, IMapper mapper)
+    public UpdateProductCommandHandler(IProductService productService)
     {
         _productService = productService;
-        _mapper = mapper;
     }
 
     public async Task<IResponseWrapper> Handle(UpdateProductCommand request,

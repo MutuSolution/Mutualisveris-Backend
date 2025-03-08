@@ -1,8 +1,8 @@
-﻿//using Application.Services;
-//using Common.Responses.Wrappers;
-//using MediatR;
+﻿using Application.Services;
+using Common.Responses.Wrappers;
+using MediatR;
 
-//namespace Application.Features.Products.Commands;
+namespace Application.Features.Products.Commands;
 
 using Application.Pipelines;
 using Application.Services;
@@ -27,15 +27,6 @@ public class DeleteProductCommandHandler :
 
     public async Task<IResponseWrapper> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var productInDb = await _productService.GetProductByIdAsync(request.ProductId);
-        if (productInDb is not null)
-        {
-            var productId = await _productService.DeleteProductAsync(productInDb);
-            return await ResponseWrapper<string>.SuccessAsync("[ML20] product entry deleted successfully.");
-        }
-        else
-        {
-            return await ResponseWrapper.FailAsync("[ML21] Product does not exist.");
-        }
+        return await _productService.DeleteProductAsync(request.ProductId);
     }
 }

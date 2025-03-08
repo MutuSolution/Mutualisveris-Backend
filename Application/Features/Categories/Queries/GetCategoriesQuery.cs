@@ -23,8 +23,7 @@ namespace Application.Features.Categories.Queries
 
         public async Task<IResponseWrapper<PaginationResult<CategoryResponse>>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _categoryService.GetCategoriesAsync(request.Parameters);
-            return (IResponseWrapper<PaginationResult<CategoryResponse>>)result;
+            return await _categoryService.GetCategoriesAsync(request.Parameters);
         }
     }
 }
