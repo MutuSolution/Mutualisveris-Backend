@@ -1,6 +1,7 @@
 using Application;
 using AspNetCoreRateLimit;
 using Infrastructure;
+using Infrastructure.Services;
 using Microsoft.Extensions.Options;
 using WebApi;
 using WebApi.Middlewares;
@@ -26,6 +27,7 @@ builder.Services.AddIdentitySettings();
 // Uygulama Katmaný
 builder.Services.AddApplicationServices();
 builder.Services.AddProductService();
+builder.Services.AddProductImageService();
 builder.Services.AddCategoryService();
 
 // Altyapý Servisleri
@@ -86,6 +88,7 @@ else // Production Ayarlarý
         .AllowAnyHeader()
         .AllowCredentials());
 }
+// Statik dosya servisini aç
 
 // Localization
 app.UseRequestLocalization(app.Services
@@ -97,6 +100,8 @@ app.UseIpRateLimiting();
 // Auth Pipeline
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseStaticFiles();
 
 // Routing
 app.MapControllers();

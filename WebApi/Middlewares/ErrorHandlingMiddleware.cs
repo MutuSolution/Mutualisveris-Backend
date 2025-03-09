@@ -8,10 +8,12 @@ namespace WebApi.Middlewares;
 public class ErrorHandlingMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
-    public ErrorHandlingMiddleware(RequestDelegate next)
+    public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext httpContext)
@@ -22,23 +24,31 @@ public class ErrorHandlingMiddleware
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Beklenmeyen bir hata oluştu.");
+
+            // ❗ Yanıt zaten başladıysa, middleware yeni yanıt yazamaz.
+            if (httpContext.Response.HasStarted)
+            {
+                _logger.LogWarning("Yanıt zaten başlatıldığı için hata middleware'i devre dışı bırakıldı.");
+                return;
+            }
+
+            // 📌 HTTP Yanıt başlıklarını ayarla
             var response = httpContext.Response;
             response.ContentType = "application/json";
 
-            var responseWrapper = await ResponseWrapper.FailAsync(ex.Message);
-
-            switch (ex)
+            // 🔥 Hata türüne göre durum kodu belirle
+            response.StatusCode = ex switch
             {
-                case CustomValidationException customValidationException:
-                    response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    break;
+                CustomValidationException => (int)HttpStatusCode.BadRequest,
+                _ => (int)HttpStatusCode.InternalServerError
+            };
 
-                default:
-                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    break;
-            }
-
+            // 🔥 Yanıtı JSON formatında oluştur
+            var responseWrapper = await ResponseWrapper.FailAsync(ex.Message);
             var result = JsonSerializer.Serialize(responseWrapper);
+
+            // 🔥 Yanıtı gönder
             await response.WriteAsync(result);
         }
     }

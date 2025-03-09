@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Attributes;
 
-namespace WebApi.Controllers;
+namespace WebApi.Controllers.Product;
 
 [Route("api/products")]
 [ApiController]

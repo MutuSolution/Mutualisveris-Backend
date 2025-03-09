@@ -38,6 +38,12 @@ public static class ServiceCollectionExtensions
             .AddTransient<IProductService, ProductService>();
         return services;
     }
+    public static IServiceCollection AddProductImageService(this IServiceCollection services)
+    {
+        services
+            .AddTransient<IProductImageService, ProductImageService>();
+        return services;
+    }
     public static IServiceCollection AddCategoryService(this IServiceCollection services)
     {
         services
