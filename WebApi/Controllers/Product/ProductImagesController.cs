@@ -26,7 +26,7 @@ public class ProductImagesController : ControllerBase
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpDelete("{imageId:int}")]
+    [HttpPut("{imageId:int}")]
     public async Task<IActionResult> DeleteProductImage(int imageId)
     {
         var response = await _productImageService.DeleteProductImageAsync(imageId);

@@ -1,7 +1,7 @@
 ﻿namespace Common.Responses.Identity;
 
 public record RoleClaimResponse
-(
-     RoleResponse Role,
-     List<RoleClaimViewModel> RoleClaims
-);
+{
+    public RoleResponse Role { get; init; }
+    public List<RoleClaimViewModel> RoleClaims { get; init; } = new();
+}

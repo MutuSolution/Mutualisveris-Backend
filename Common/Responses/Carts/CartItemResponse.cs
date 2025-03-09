@@ -1,9 +1,9 @@
 ﻿namespace Common.Responses.Carts;
 
 public record CartItemResponse
-(
-    int Id,
-    int Quantity,
-    int ProductId,
-    string ProductName // Ürünün adını eklemek faydalı olabilir
-);
+{
+    public int Id { get; init; }
+    public int Quantity { get; init; }
+    public int ProductId { get; init; }
+    public string ProductName { get; init; } = string.Empty;
+}

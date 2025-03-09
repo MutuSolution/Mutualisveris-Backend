@@ -1,4 +1,6 @@
 ﻿namespace Common.Responses.Identity;
 
 public record RegisterResponse
-(string Message);
+{
+    public string Message { get; init; } = string.Empty;
+}

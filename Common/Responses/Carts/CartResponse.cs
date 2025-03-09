@@ -1,9 +1,8 @@
 ﻿namespace Common.Responses.Carts;
-
 public record CartResponse
-(
-    int Id,
-    DateTime CreatedAt,
-    string UserId,
-    List<CartItemResponse> Items
-);
+{
+    public int Id { get; init; }
+    public DateTime CreatedAt { get; init; }
+    public string UserId { get; init; } = string.Empty;
+    public List<CartItemResponse> Items { get; init; } = new();
+}

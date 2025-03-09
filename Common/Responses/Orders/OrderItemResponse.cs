@@ -1,10 +1,10 @@
 ﻿namespace Common.Responses.Orders;
 
 public record OrderItemResponse
-(
-    int Id,
-    int Quantity,
-    decimal UnitPrice,
-    int ProductId,
-    string ProductName // Ürünün adı, sipariş detaylarında kullanışlıdır.
-);
+{
+    public int Id { get; init; }
+    public int Quantity { get; init; }
+    public decimal UnitPrice { get; init; }
+    public int ProductId { get; init; }
+    public string ProductName { get; init; } = string.Empty;
+}
