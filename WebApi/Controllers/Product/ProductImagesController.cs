@@ -1,7 +1,7 @@
 ﻿using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("product-images")]
+[Route("product-image")]
 [ApiController]
 public class ProductImagesController : ControllerBase
 {
@@ -26,14 +26,14 @@ public class ProductImagesController : ControllerBase
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpPut("{imageId:int}")]
+    [HttpPut("delete/{imageId:int}")]
     public async Task<IActionResult> DeleteProductImage(int imageId)
     {
         var response = await _productImageService.DeleteProductImageAsync(imageId);
         return response.IsSuccessful ? Ok(response) : BadRequest(response);
     }
 
-    [HttpPut("{imageId:int}/set-main")]
+    [HttpPut("set-main/{imageId:int}")]
     public async Task<IActionResult> SetMainImage(int imageId)
     {
         var response = await _productImageService.SetMainImageAsync(imageId);

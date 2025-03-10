@@ -84,8 +84,8 @@ public sealed class ProductImageService : IProductImageService
     /// ✅ **Belirli Bir Resmi Silme (Dosya Silme Dahil)**
     public async Task<IResponseWrapper<string>> DeleteProductImageAsync(int imageId)
     {
-        var image = await _context.ProductImages.FindAsync(imageId);
-        if (image == null)
+        var image = await _context.ProductImages.Where(i => i.ProductId == imageId).FirstOrDefaultAsync();
+        if (image is null)
             return ResponseWrapper<string>.Fail("Resim bulunamadı.");
 
         // 📌 Önce dosyayı fiziksel olarak sil

@@ -8,7 +8,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers.Identity;
 
-[Route("[controller]")]
+[Route("auth")]
 public class AuthController : MyBaseController<AuthController>
 {
     [HttpPost("login")]

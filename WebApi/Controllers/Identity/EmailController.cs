@@ -5,7 +5,7 @@ using Common.Requests.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("[controller]")]
+[Route("email")]
 public class EmailController : MyBaseController<EmailController>
 {
     [HttpPost("send-confirm-email")]

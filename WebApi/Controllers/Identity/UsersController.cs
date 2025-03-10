@@ -9,7 +9,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers.Identity;
 
-[Route("[controller]")]
+[Route("user")]
 public class UsersController : MyBaseController<UsersController>
 {
 

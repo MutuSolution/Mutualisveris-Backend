@@ -12,7 +12,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers.Admin;
 
-[Route("[controller]")]
+[Route("admin")]
 [ApiController]
 public class AdminController : MyBaseController<AdminController>
 {

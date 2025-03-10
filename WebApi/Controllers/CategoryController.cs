@@ -9,7 +9,7 @@ using WebApi.Attributes;
 
 namespace WebApi.Controllers;
 
-[Route("[controller]")]
+[Route("category")]
 public class CategoryController : MyBaseController<CategoryController>
 {
     [HttpPost]
@@ -30,7 +30,7 @@ public class CategoryController : MyBaseController<CategoryController>
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpPut("hard-delete")]
+    [HttpPut("hard-delete/{id:int}")]
     [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
     public async Task<IActionResult> HardDeleteCategory(int id)
     {
@@ -39,7 +39,7 @@ public class CategoryController : MyBaseController<CategoryController>
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpPut("soft-delete")]
+    [HttpPut("soft-delete/{id:int}")]
     [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
     public async Task<IActionResult> SoftDeleteCategory(int id)
     {
@@ -48,7 +48,7 @@ public class CategoryController : MyBaseController<CategoryController>
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpGet("id/{id}")]
+    [HttpGet("{id:int}")]
     [AllowAnonymous]
     public async Task<IActionResult> GetCategoryById(int id)
     {
