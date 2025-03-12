@@ -1,6 +1,4 @@
 ﻿using Application.Services;
-using AutoMapper;
-using Common.Responses.Products;
 using Common.Responses.Wrappers;
 using MediatR;
 

@@ -1,5 +1,4 @@
-﻿using Domain;
-using Domain.Enums;
+﻿using Domain.Enums;
 
 namespace Common.Requests.Addresses;
 

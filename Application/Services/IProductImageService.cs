@@ -1,6 +1,5 @@
 ﻿using Common.Responses.Products;
 using Common.Responses.Wrappers;
-using Domain.Responses;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Services;

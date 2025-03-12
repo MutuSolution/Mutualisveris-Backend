@@ -1,5 +1,4 @@
 ﻿using Application.Services;
-using AutoMapper;
 using Common.Responses.Pagination;
 using Common.Responses.Products;
 using Common.Responses.Wrappers;

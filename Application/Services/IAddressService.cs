@@ -1,8 +1,6 @@
 ﻿using Common.Requests.Addresses;
 using Common.Responses.Addresses;
 using Common.Responses.Wrappers;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Application.Services;
 

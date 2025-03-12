@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Domain;
+﻿using Domain;
 using Infrastructure.DbConfig;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class CategoryConfig : IEntityTypeConfiguration<Category>
 {
@@ -25,6 +25,6 @@ public class CategoryConfig : IEntityTypeConfiguration<Category>
             .HasForeignKey(c => c.ParentCategoryId)
             .OnDelete(DeleteBehavior.Restrict); // ❗ Üst kategori silindiğinde alt kategoriler korunur
 
-        builder.ToTable("Categories",SchemaNames.Catalog);
+        builder.ToTable("Categories", SchemaNames.Catalog);
     }
 }

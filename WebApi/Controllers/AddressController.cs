@@ -2,8 +2,6 @@
 using Application.Features.Address.Queries;
 using Common.Authorization;
 using Common.Requests.Addresses;
-using Infrastructure.DbConfig;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Attributes;
 

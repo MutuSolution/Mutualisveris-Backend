@@ -5,7 +5,6 @@ using Common.Responses.Pagination;
 using Common.Responses.Products;
 using Common.Responses.Wrappers;
 using Domain;
-using Domain.Responses;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

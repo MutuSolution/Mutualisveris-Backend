@@ -1,12 +1,7 @@
-﻿using Application.Services;
-using Common.Responses.Wrappers;
-using MediatR;
-
-namespace Application.Features.Products.Commands;
+﻿namespace Application.Features.Products.Commands;
 
 using Application.Pipelines;
 using Application.Services;
-using Common.Responses.Products;
 using Common.Responses.Wrappers;
 using MediatR;
 

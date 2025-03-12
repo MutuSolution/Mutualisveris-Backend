@@ -6,9 +6,6 @@ using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services;
 

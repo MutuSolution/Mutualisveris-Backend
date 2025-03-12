@@ -1,9 +1,7 @@
-﻿using MediatR;
+﻿using Application.Features.Cart.Commands;
 using Application.Services;
 using Common.Responses.Wrappers;
-using System.Threading;
-using System.Threading.Tasks;
-using Application.Features.Cart.Commands;
+using MediatR;
 
 namespace Application.Features.Cart.Handlers;
 

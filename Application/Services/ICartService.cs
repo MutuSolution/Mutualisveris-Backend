@@ -1,7 +1,6 @@
 ﻿using Common.Request.Cart;
 using Common.Responses.Cart;
 using Common.Responses.Wrappers;
-using System.Threading.Tasks;
 
 namespace Application.Services;
 

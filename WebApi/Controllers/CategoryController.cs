@@ -63,6 +63,6 @@ public class CategoryController : MyBaseController<CategoryController>
     {
         var query = new GetCategoriesQuery { Parameters = parameters };
         var result = await MediatorSender.Send(query);
-              return result.IsSuccessful ? Ok(result) : NotFound(result);
+        return result.IsSuccessful ? Ok(result) : NotFound(result);
     }
 }

@@ -3,16 +3,10 @@ using AutoMapper;
 using Common.Responses.Products;
 using Common.Responses.Wrappers;
 using Domain;
-using Domain.Responses;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Services;
 

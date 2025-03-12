@@ -1,7 +1,6 @@
 using Application;
 using AspNetCoreRateLimit;
 using Infrastructure;
-using Infrastructure.Services;
 using Microsoft.Extensions.Options;
 using WebApi;
 using WebApi.Middlewares;

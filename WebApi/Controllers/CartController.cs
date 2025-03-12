@@ -1,11 +1,8 @@
 ﻿using Application.Features.Cart.Commands;
 using Application.Features.Cart.Queries;
-using Microsoft.AspNetCore.Mvc;
-using MediatR;
 using Common.Request.Cart;
-using Common.Authorization;
-using WebApi.Attributes;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {

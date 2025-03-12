@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Common.Request.Cart;
 using FluentValidation;
-using Common.Request.Cart;
-using Application.Features.Cart.Commands;
 
 namespace Application.Features.Cart.Validators.AddToCart;
 
@@ -20,4 +14,3 @@ public class AddToCartRequestValidator : AbstractValidator<AddToCartRequest>
     }
 }
 
- 

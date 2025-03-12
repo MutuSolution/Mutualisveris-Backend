@@ -1,5 +1,4 @@
 ﻿using Domain.Enums;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Domain;
 

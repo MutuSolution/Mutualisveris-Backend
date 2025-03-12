@@ -1,11 +1,7 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Application.Features.Cart.Commands;
 using Application.Services;
 using Common.Responses.Wrappers;
-using System.Threading;
-using System.Threading.Tasks;
-using Common.Request.Cart;
-using Application.Features.Cart.Commands;
+using MediatR;
 
 namespace Application.Features.Cart.Handlers
 {

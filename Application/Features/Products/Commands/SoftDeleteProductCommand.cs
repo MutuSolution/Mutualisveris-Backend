@@ -1,5 +1,4 @@
 ﻿using Application.Services;
-using Common.Requests.Products;
 using Common.Responses.Wrappers;
 using MediatR;
 

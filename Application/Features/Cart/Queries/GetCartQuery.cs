@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using Common.Responses.Cart;
 using Common.Responses.Wrappers;
-using Common.Responses.Cart;
+using MediatR;
 
 namespace Application.Features.Cart.Queries;
 

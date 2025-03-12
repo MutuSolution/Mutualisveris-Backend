@@ -2,7 +2,6 @@
 using Common.Responses.Pagination;
 using Common.Responses.Products;
 using Common.Responses.Wrappers;
-using Domain.Responses;
 
 namespace Application.Services;
 

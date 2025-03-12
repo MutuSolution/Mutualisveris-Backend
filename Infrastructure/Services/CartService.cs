@@ -4,11 +4,8 @@ using Common.Request.Cart;
 using Common.Responses.Cart;
 using Common.Responses.Wrappers;
 using Domain;
-using Microsoft.EntityFrameworkCore;
 using Infrastructure.Context;
-using System.Linq;
-using System;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services
 {
