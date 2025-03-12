@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentValidation;
 using Common.Request.Cart;
+using Application.Features.Cart.Commands;
 
-namespace Application.Features.Cart.Validators;
+namespace Application.Features.Cart.Validators.AddToCart;
 
 
 public class AddToCartRequestValidator : AbstractValidator<AddToCartRequest>
@@ -18,3 +19,5 @@ public class AddToCartRequestValidator : AbstractValidator<AddToCartRequest>
         RuleFor(x => x.Quantity).GreaterThan(0);
     }
 }
+
+ 
