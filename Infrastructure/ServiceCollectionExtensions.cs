@@ -56,7 +56,12 @@ public static class ServiceCollectionExtensions
             .AddTransient<IEmailService, EmailService>();
         return services;
     }
-
+    public static IServiceCollection AddCartService(this IServiceCollection services)
+    {
+        services
+            .AddTransient<ICartService, CartService>();
+        return services;
+    }
     public static void AddInfrastructureDependencies(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());

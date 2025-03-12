@@ -1,5 +1,8 @@
 ﻿using Application.Services;
+using Common.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Attributes;
 
 [Route("product-image")]
 [ApiController]
@@ -13,6 +16,7 @@ public class ProductImagesController : ControllerBase
     }
 
     [HttpPost("{productId:int}")]
+    [MustHavePermission(AppFeature.Products, AppAction.Create)]
     public async Task<IActionResult> AddProductImage(int productId, IFormFile file)
     {
         var response = await _productImageService.AddProductImageAsync(productId, file);
@@ -20,6 +24,7 @@ public class ProductImagesController : ControllerBase
     }
 
     [HttpGet("{productId:int}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetProductImages(int productId)
     {
         var response = await _productImageService.GetProductImagesAsync(productId);
@@ -27,6 +32,8 @@ public class ProductImagesController : ControllerBase
     }
 
     [HttpPut("delete/{imageId:int}")]
+    [MustHavePermission(AppFeature.Products, AppAction.Delete)]
+
     public async Task<IActionResult> DeleteProductImage(int imageId)
     {
         var response = await _productImageService.DeleteProductImageAsync(imageId);
@@ -34,6 +41,8 @@ public class ProductImagesController : ControllerBase
     }
 
     [HttpPut("set-main/{imageId:int}")]
+    [MustHavePermission(AppFeature.Products, AppAction.Update)]
+
     public async Task<IActionResult> SetMainImage(int imageId)
     {
         var response = await _productImageService.SetMainImageAsync(imageId);

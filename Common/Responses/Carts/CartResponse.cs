@@ -1,8 +1,11 @@
-﻿namespace Common.Responses.Carts;
+﻿namespace Common.Responses.Cart;
+
 public record CartResponse
 {
-    public int Id { get; init; }
-    public DateTime CreatedAt { get; init; }
-    public string UserId { get; init; } = string.Empty;
+    public int CartId { get; init; }
     public List<CartItemResponse> Items { get; init; } = new();
+    public decimal TotalAmount { get; init; }
+    public int ItemCount => Items.Sum(i => i.Quantity); // 🔥 Toplam ürün sayısı (Adet bazında)
+    public DateTime CreatedAt { get; init; } // 🔥 Sepet oluşturulma zamanı
+    public bool IsActive { get; init; } // 🔥 Sepet aktif mi?
 }

@@ -2,7 +2,7 @@
 using Common.Request.Category;
 using Common.Requests.Products;
 using Common.Responses.Addresses;
-using Common.Responses.Carts;
+using Common.Responses.Cart;
 using Common.Responses.Identity;
 using Common.Responses.Orders;
 using Common.Responses.Products;
@@ -45,13 +45,14 @@ internal class MappingProfiles : Profile
             .MaxDepth(2)
             .PreserveReferences();
 
-        // ✅ Cart Mapping
+        // ✅ 🛠 **Cart Mapping Güncellendi!**
         CreateMap<Cart, CartResponse>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items ?? new List<CartItem>()));
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items != null ? src.Items : new List<CartItem>())) // 🛠 Null listesi için önlem
+            .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Items != null ? src.Items.Sum(i => i.Quantity * i.UnitPrice) : 0)); // 🛠 Null check
 
-        // ✅ Cart Item Mapping
+        // ✅ 🛠 **CartItem Mapping Güncellendi!**
         CreateMap<CartItem, CartItemResponse>()
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name));
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün")); // 🛠 Null check
 
         // ✅ Address Mapping
         CreateMap<Address, AddressResponse>();
@@ -69,7 +70,5 @@ internal class MappingProfiles : Profile
 
         // ✅ Payment Mapping
         CreateMap<Payment, PaymentResponse>();
- 
-             
     }
 }

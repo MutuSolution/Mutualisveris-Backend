@@ -51,8 +51,6 @@ public sealed class CategoryService : ICategoryService
         return ResponseWrapper<CategoryResponse>.Success(mappedCategory, "Kategori başarıyla oluşturuldu.");
     }
 
-
-
     public async Task<IResponseWrapper<CategoryResponse>> UpdateCategoryAsync(UpdateCategoryRequest request)
     {
         if (request == null || string.IsNullOrWhiteSpace(request.Name))
