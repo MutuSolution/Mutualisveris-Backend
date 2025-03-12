@@ -74,6 +74,7 @@ namespace Infrastructure.Services.Identity
             user.RefreshToken = GenerateRefreshToken();
             user.RefreshTokenExpiryDate = DateTime.UtcNow.AddDays(7);
             await _userManager.UpdateAsync(user);
+            var userRoles = await _userManager.GetRolesAsync(user);
 
             var jwtToken = await GenerateJWTAsync(user);
             var response = new TokenResponse
@@ -84,6 +85,7 @@ namespace Infrastructure.Services.Identity
                 lastName: user.LastName,
                 userName: user.UserName,
                 phone: user.PhoneNumber,
+                roles: userRoles.ToArray(),
                 exp: DateTime.UtcNow.AddMinutes(_appConfiguration.TokenExpiryInMinutes).ToString(),
                 Token: jwtToken,
                 RefreshToken: user.RefreshToken,
@@ -117,7 +119,7 @@ namespace Infrastructure.Services.Identity
             var newJwtToken = GenerateEncryptedToken(GetSigningCredentials(), await GetClaimsAsync(user));
             user.RefreshToken = GenerateRefreshToken();
             await _userManager.UpdateAsync(user);
-
+            var userRoles = await _userManager.GetRolesAsync(user);
             var response = new TokenResponse
             (
                 id: user.Id,
@@ -126,6 +128,7 @@ namespace Infrastructure.Services.Identity
                 lastName: user.LastName,
                 userName: user.UserName,
                 phone: user.PhoneNumber,
+                roles: userRoles.ToArray(),
                 exp: DateTime.UtcNow.AddMinutes(_appConfiguration.TokenExpiryInMinutes).ToString(),
                 Token: newJwtToken,
                 RefreshToken: user.RefreshToken,

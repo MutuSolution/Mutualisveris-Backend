@@ -9,6 +9,7 @@ public record TokenResponse
      string userName,
      string phone,
      string exp,
+     string[] roles,
      string Token,
      string RefreshToken,
      DateTime RefreshTokenExpiryTime
