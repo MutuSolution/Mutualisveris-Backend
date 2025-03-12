@@ -61,6 +61,12 @@ public static class ServiceCollectionExtensions
         services
             .AddTransient<ICartService, CartService>();
         return services;
+    } 
+    public static IServiceCollection AddAddressService(this IServiceCollection services)
+    {
+        services
+            .AddTransient<IAddressService, AddressService>();
+        return services;
     }
     public static void AddInfrastructureDependencies(this IServiceCollection services)
     {

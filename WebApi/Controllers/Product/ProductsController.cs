@@ -57,7 +57,7 @@ public class ProductsController : MyBaseController<ProductsController>
     }
 
     /// ✅ **Ürünü tamamen silme**
-    [HttpPut("hard-delete/{id:int}")]
+    [HttpDelete("hard-delete/{id:int}")]
     [MustHavePermission(AppFeature.Products, AppAction.Delete)]
     public async Task<IActionResult> DeleteProduct(int id)
     {

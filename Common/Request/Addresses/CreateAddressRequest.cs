@@ -1,10 +1,11 @@
-﻿using Domain.Enums;
+﻿using Domain;
+using Domain.Enums;
 
-namespace Common.Responses.Addresses;
+namespace Common.Requests.Addresses;
 
-public record AddressResponse
+public record CreateAddressRequest
 {
-    public int Id { get; init; }
+    public string UserId { get; init; }
     public string Street { get; init; }
     public string City { get; init; }
     public string Country { get; init; }

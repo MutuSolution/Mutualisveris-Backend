@@ -31,7 +31,7 @@ public class ProductImagesController : ControllerBase
         return response.IsSuccessful ? Ok(response) : NotFound(response);
     }
 
-    [HttpPut("delete/{imageId:int}")]
+    [HttpDelete("delete/{imageId:int}")]
     [MustHavePermission(AppFeature.Products, AppAction.Delete)]
 
     public async Task<IActionResult> DeleteProductImage(int imageId)

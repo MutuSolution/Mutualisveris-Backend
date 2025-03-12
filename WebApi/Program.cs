@@ -30,6 +30,8 @@ builder.Services.AddProductService();
 builder.Services.AddProductImageService();
 builder.Services.AddCategoryService();
 builder.Services.AddCartService();
+builder.Services.AddAddressService();
+
 
 // Altyapý Servisleri
 builder.Services.AddInfrastructureDependencies();

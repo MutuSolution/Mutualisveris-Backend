@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Common.Request.Category;
+using Common.Requests.Addresses;
 using Common.Requests.Products;
 using Common.Responses.Addresses;
 using Common.Responses.Cart;
@@ -56,6 +57,8 @@ internal class MappingProfiles : Profile
 
         // ✅ Address Mapping
         CreateMap<Address, AddressResponse>();
+        CreateMap<CreateAddressRequest, Address>();
+        CreateMap<UpdateAddressRequest, Address>();
 
         // ✅ Order Mapping (Enum Dönüşümü Optimize Edildi)
         CreateMap<Order, OrderResponse>()

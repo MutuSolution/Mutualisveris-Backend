@@ -1,4 +1,7 @@
-﻿namespace Domain;
+﻿using Domain.Enums;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
+namespace Domain;
 
 public class Address
 {
@@ -14,8 +17,3 @@ public class Address
     public ApplicationUser User { get; set; }
 }
 
-public enum AddressType
-{
-    Billing,
-    Shipping
-}

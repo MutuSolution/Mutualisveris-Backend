@@ -21,7 +21,7 @@ namespace WebApi.Controllers
             return response.IsSuccessful ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPost("update")]
+        [HttpPut("update")]
         [AllowAnonymous]
         public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartItemRequest request)
         {
@@ -29,7 +29,7 @@ namespace WebApi.Controllers
             return response.IsSuccessful ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPost("remove")]
+        [HttpDelete("remove")]
         [AllowAnonymous]
         public async Task<IActionResult> RemoveFromCart([FromBody] RemoveFromCartRequest request)
         {
