@@ -11,4 +11,5 @@ public record UpdateAddressRequest
     public string Country { get; init; }
     public string ZipCode { get; init; }
     public AddressType Type { get; init; }
+    public string PhoneNumber { get; init; }
 }

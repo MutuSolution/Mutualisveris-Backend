@@ -1,7 +1,8 @@
-﻿using Domain;
-using Infrastructure.DbConfig;
+﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Infrastructure.DbConfig;
+using Domain;
 
 public class AddressConfig : IEntityTypeConfiguration<Address>
 {
@@ -20,6 +21,11 @@ public class AddressConfig : IEntityTypeConfiguration<Address>
         builder.Property(a => a.ZipCode)
             .IsRequired()
             .HasMaxLength(20);
+
+        builder.Property(a => a.PhoneNumber)
+            .IsRequired()
+            .HasMaxLength(15)
+            .HasColumnType("VARCHAR(15)");
 
         builder.Property(a => a.Type)
             .HasConversion<int>();

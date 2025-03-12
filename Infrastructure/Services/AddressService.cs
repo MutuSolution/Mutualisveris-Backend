@@ -6,6 +6,7 @@ using Common.Responses.Wrappers;
 using Domain;
 using Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Infrastructure.Services;
 
@@ -22,6 +23,9 @@ public class AddressService : IAddressService
 
     public async Task<IResponseWrapper<AddressResponse>> AddAddressAsync(CreateAddressRequest request)
     {
+        if (!Regex.IsMatch(request.PhoneNumber, @"^\+?[1-9][0-9]{7,14}$"))
+            return ResponseWrapper<AddressResponse>.Fail("Geçerli bir telefon numarası girin.");
+
         var userExists = await _context.Users.AnyAsync(u => u.Id == request.UserId);
         if (!userExists)
             return ResponseWrapper<AddressResponse>.Fail("Kullanıcı bulunamadı.");
@@ -32,6 +36,7 @@ public class AddressService : IAddressService
 
         return ResponseWrapper<AddressResponse>.Success(_mapper.Map<AddressResponse>(newAddress), "Adres başarıyla eklendi.");
     }
+
 
     public async Task<IResponseWrapper<AddressResponse>> UpdateAddressAsync(UpdateAddressRequest request)
     {
