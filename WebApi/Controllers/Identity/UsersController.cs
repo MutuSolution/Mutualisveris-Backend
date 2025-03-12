@@ -1,6 +1,7 @@
 ﻿using Application.Features.Identity.Users.Commands;
 using Application.Features.Identity.Users.Queries;
 using Common.Authorization;
+using Common.Request.Identity;
 using Common.Requests.Identity;
 using Common.Responses.Pagination;
 using Microsoft.AspNetCore.Authorization;
@@ -94,6 +95,15 @@ public class UsersController : MyBaseController<UsersController>
     public async Task<IActionResult> ChangeUserStatus([FromBody] ChangeUserStatusRequest request)
     {
         var response = await MediatorSender.Send(new ChangeUserStatusCommand { ChangeUserStatus = request });
+        if (response.IsSuccessful) return Ok(response);
+        return NotFound(response);
+    }
+
+    [HttpPut("change-phone-number")]
+    [MustHavePermission(AppFeature.Users, AppAction.Update)]
+    public async Task<IActionResult> ChangeUserPhoneNumber([FromBody] ChangeUserPhoneRequest request)
+    {
+        var response = await MediatorSender.Send(new ChangeUserPhoneCommand { ChangeUserPhoneRequest = request });
         if (response.IsSuccessful) return Ok(response);
         return NotFound(response);
     }

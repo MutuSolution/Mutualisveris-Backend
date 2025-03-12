@@ -10,6 +10,7 @@ using Domain;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace Infrastructure.Services.Identity;
 
@@ -326,5 +327,23 @@ public sealed class UserService : IUserService
             errorDescriptions.Add(error.Description);
         }
         return errorDescriptions;
+    }
+
+    public async Task<IResponseWrapper<bool>> UpdateUserPhoneNumberAsync(string userId, string phoneNumber)
+    {
+        if (!Regex.IsMatch(phoneNumber, @"^\+?[1-9][0-9]{7,14}$"))
+            return ResponseWrapper<bool>.Fail("Geçerli bir telefon numarası girin.");
+
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+            return ResponseWrapper<bool>.Fail("Kullanıcı bulunamadı.");
+
+        user.PhoneNumber = phoneNumber;
+        var result = await _userManager.UpdateAsync(user);
+
+        if (!result.Succeeded)
+            return ResponseWrapper<bool>.Fail("Telefon numarası güncellenirken hata oluştu.");
+
+        return ResponseWrapper<bool>.Success(true, "Telefon numarası başarıyla güncellendi.");
     }
 }
