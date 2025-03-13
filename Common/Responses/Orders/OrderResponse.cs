@@ -1,12 +1,27 @@
-﻿namespace Common.Responses.Orders;
+﻿using Common.Responses.Addresses;
+using Common.Responses.Identity;
+using Common.Responses.Payments;
+using Domain.Enums;
+
+namespace Common.Responses.Orders;
 
 public record OrderResponse
 {
     public int Id { get; init; }
     public DateTime OrderDate { get; init; }
     public decimal TotalAmount { get; init; }
-    public string Status { get; init; } = string.Empty; // Enum ise string'e dönüştürülebilir
-    public string UserId { get; init; } = string.Empty;
+    public OrderStatus Status { get; init; }
+
+    // Kullanıcı Bilgileri
+    public UserResponse User { get; init; } // ✅ Kullanıcı detaylarını içeren model
+
+    // Ödeme Bilgileri
+    public PaymentResponse? Payment { get; init; }
+
+    // Sipariş Ürünleri
     public List<OrderItemResponse> OrderItems { get; init; } = new();
-    public PaymentResponse Payment { get; init; } = new();
+
+    // Adres Bilgileri
+    public AddressResponse? ShippingAddress { get; init; }
+    public AddressResponse? BillingAddress { get; init; }
 }

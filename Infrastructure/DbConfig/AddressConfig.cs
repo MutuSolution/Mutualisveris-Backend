@@ -1,8 +1,8 @@
 ﻿
+using Domain;
+using Infrastructure.DbConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Infrastructure.DbConfig;
-using Domain;
 
 public class AddressConfig : IEntityTypeConfiguration<Address>
 {

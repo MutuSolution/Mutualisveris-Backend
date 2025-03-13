@@ -1,30 +1,23 @@
-﻿namespace Domain;
+﻿using Domain.Enums;
+
+namespace Domain.Entities;
 
 public class Order
 {
     public int Id { get; set; }
+    public string UserId { get; set; }
+    public ApplicationUser User { get; set; } // ✅ Kullanıcı ilişkisini ekledik
+
     public DateTime OrderDate { get; set; } = DateTime.UtcNow;
     public decimal TotalAmount { get; set; }
     public OrderStatus Status { get; set; } = OrderStatus.Pending;
 
     // Relationships
-    public string UserId { get; set; }
-    public ApplicationUser User { get; set; }
     public List<OrderItem> OrderItems { get; set; } = new();
-    public Payment Payment { get; set; }
+    public Payment? Payment { get; set; }
 
-    // Addresses for order
-    public int? ShippingAddressId { get; set; }  // Yeni ekleme
-    public int? BillingAddressId { get; set; }   // Yeni ekleme
-    public Address ShippingAddress { get; set; }  // Yeni ekleme
-    public Address BillingAddress { get; set; }   // Yeni ekleme
-}
-
-public enum OrderStatus
-{
-    Pending,
-    Processing,
-    Shipped,
-    Delivered,
-    Cancelled
+    public int? ShippingAddressId { get; set; }
+    public int? BillingAddressId { get; set; }
+    public Address? ShippingAddress { get; set; }
+    public Address? BillingAddress { get; set; }
 }

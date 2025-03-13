@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Entities;
 using Infrastructure.DbConfig;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -39,12 +40,12 @@ public class OrderConfig : IEntityTypeConfiguration<Order>
         builder.HasOne(o => o.ShippingAddress)
             .WithMany()
             .HasForeignKey(o => o.ShippingAddressId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(o => o.BillingAddress)
             .WithMany()
             .HasForeignKey(o => o.BillingAddressId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.ToTable("Orders", SchemaNames.Order);
     }

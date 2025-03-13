@@ -1,4 +1,7 @@
-﻿namespace Domain;
+﻿using Domain.Entities;
+using Domain.Enums;
+
+namespace Domain;
 
 public class Payment
 {
@@ -11,18 +14,4 @@ public class Payment
     // Relationships
     public int OrderId { get; set; }
     public Order Order { get; set; }
-}
-
-public enum PaymentMethod
-{
-    CreditCard,
-    PayPal,
-    BankTransfer
-}
-
-public enum PaymentStatus
-{
-    Pending,
-    Completed,
-    Failed
 }

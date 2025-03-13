@@ -7,6 +7,8 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        builder.ToTable("Products", SchemaNames.Catalog);
+
         builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Name)
@@ -45,6 +47,5 @@ public class ProductConfig : IEntityTypeConfiguration<Product>
             .HasForeignKey(oi => oi.ProductId)
             .OnDelete(DeleteBehavior.Restrict); // Sipariş geçmişi korunur
 
-        builder.ToTable("Products", SchemaNames.Catalog);
     }
 }

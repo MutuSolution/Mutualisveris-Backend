@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Common.Request.Category;
 using Common.Requests.Addresses;
+using Common.Requests.Payments;
 using Common.Requests.Products;
 using Common.Responses.Addresses;
 using Common.Responses.Cart;
 using Common.Responses.Identity;
 using Common.Responses.Orders;
+using Common.Responses.Payments;
 using Common.Responses.Products;
 using Domain;
+using Domain.Entities;
 using Domain.Responses;
 
 namespace Infrastructure;
@@ -37,41 +40,44 @@ internal class MappingProfiles : Profile
         // ✅ Product Image Mapping
         CreateMap<ProductImage, ProductImageResponse>();
 
-        // ✅ Category Mapping (Daha Güvenli ve Optimize)
+        // ✅ Category Mapping (Optimize Edildi)
         CreateMap<Category, CategoryResponse>()
-            .ForMember(dest => dest.IsVisible, opt => opt.MapFrom(src => src.IsVisible))
             .ForMember(dest => dest.ParentCategoryName, opt => opt.MapFrom(src => src.ParentCategory != null ? src.ParentCategory.Name : string.Empty))
             .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products != null ? src.Products.Count : 0))
             .ForMember(dest => dest.SubCategories, opt => opt.MapFrom(src => src.SubCategories ?? new List<Category>()))
             .MaxDepth(2)
             .PreserveReferences();
 
-        // ✅ 🛠 **Cart Mapping Güncellendi!**
+        // ✅ Cart Mapping
         CreateMap<Cart, CartResponse>()
-            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items != null ? src.Items : new List<CartItem>())) // 🛠 Null listesi için önlem
-            .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Items != null ? src.Items.Sum(i => i.Quantity * i.UnitPrice) : 0)); // 🛠 Null check
+            .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items ?? new List<CartItem>()))
+            .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Items != null ? src.Items.Sum(i => i.Quantity * i.UnitPrice) : 0));
 
-        // ✅ 🛠 **CartItem Mapping Güncellendi!**
+        // ✅ CartItem Mapping
         CreateMap<CartItem, CartItemResponse>()
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün")); // 🛠 Null check
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün"));
 
         // ✅ Address Mapping
         CreateMap<Address, AddressResponse>();
         CreateMap<CreateAddressRequest, Address>();
         CreateMap<UpdateAddressRequest, Address>();
 
-        // ✅ Order Mapping (Enum Dönüşümü Optimize Edildi)
+        // ✅ Order Mapping
         CreateMap<Order, OrderResponse>()
-            .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems ?? new List<OrderItem>()))
-            .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.TotalAmount))
-            .ForMember(dest => dest.Status, opt => opt.MapFrom(src => Enum.GetName(typeof(OrderStatus), src.Status)));  // Daha performanslı Enum Dönüşümü
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User != null ? src.User : null)) // ✅ Kullanıcı bilgilerini ekledik
+            .ForMember(dest => dest.Payment, opt => opt.MapFrom(src => src.Payment))
+            .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
+            .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress))
+            .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems ?? new List<OrderItem>()));
 
         // ✅ Order Item Mapping
         CreateMap<OrderItem, OrderItemResponse>()
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
-            .ForMember(dest => dest.UnitPrice, opt => opt.MapFrom(src => src.UnitPrice));
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün"))
+            .ForMember(dest => dest.SKU, opt => opt.MapFrom(src => src.Product != null ? src.Product.SKU : "N/A"))
+            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product != null && src.Product.Images.Any() ? src.Product.Images.FirstOrDefault().ImageUrl : string.Empty));
 
         // ✅ Payment Mapping
         CreateMap<Payment, PaymentResponse>();
+        CreateMap<PaymentRequest, Payment>();
     }
 }
