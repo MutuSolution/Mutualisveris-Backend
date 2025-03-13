@@ -7,5 +7,4 @@ public record CartResponse
     public decimal TotalAmount { get; init; }
     public int ItemCount => Items.Sum(i => i.Quantity); // 🔥 Toplam ürün sayısı (Adet bazında)
     public DateTime CreatedAt { get; init; } // 🔥 Sepet oluşturulma zamanı
-    public bool IsActive { get; init; } // 🔥 Sepet aktif mi?
 }

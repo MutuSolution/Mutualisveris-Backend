@@ -94,7 +94,6 @@ public class AdminController : MyBaseController<AdminController>
                 return await ResponseWrapper.FailAsync(GetIdentityResultErrorDescriptions(result));
         }
 
-
         var identityResult = await _userManager.UpdateAsync(userInDb);
         if (identityResult.Succeeded)
         {

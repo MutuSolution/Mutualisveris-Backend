@@ -40,7 +40,7 @@ public class CategoryController : MyBaseController<CategoryController>
     }
 
     [HttpPut("soft-delete/{id:int}")]
-    [MustHavePermission(AppFeature.Categories, AppAction.Delete)]
+    [MustHavePermission(AppFeature.Categories, AppAction.Update)]
     public async Task<IActionResult> SoftDeleteCategory(int id)
     {
         var response = await MediatorSender

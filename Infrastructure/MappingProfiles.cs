@@ -19,28 +19,28 @@ internal class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
-        // ✅ Identity Mapping
+        // ✅ **Identity Mapping**
         CreateMap<ApplicationUser, UserResponse>();
         CreateMap<ApplicationRole, RoleResponse>();
         CreateMap<ApplicationRoleClaim, RoleClaimViewModel>().ReverseMap();
 
-        // ✅ Requests Mapping (Create & Update)
+        // ✅ **Requests Mapping (Create & Update)**
         CreateMap<CreateProductRequest, Product>().ReverseMap();
         CreateMap<CreateCategoryRequest, Category>().ReverseMap();
         CreateMap<UpdateCategoryRequest, Category>().ReverseMap();
         CreateMap<UpdateProductRequest, Product>().ReverseMap();
 
-        // ✅ Product Mapping
+        // ✅ **Product Mapping**
         CreateMap<Product, ProductResponse>()
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : string.Empty))
             .ForMember(dest => dest.ImageUrls, opt => opt.MapFrom(src => src.Images.Select(i => i.ImageUrl).ToList()))
             .ForMember(dest => dest.OrderItemCount, opt => opt.MapFrom(src => src.OrderItems.Count))
             .ForMember(dest => dest.LikeCount, opt => opt.MapFrom(src => src.Likes != null ? src.Likes.Count : 0));
 
-        // ✅ Product Image Mapping
+        // ✅ **Product Image Mapping**
         CreateMap<ProductImage, ProductImageResponse>();
 
-        // ✅ Category Mapping (Optimize Edildi)
+        // ✅ **Category Mapping (Optimize Edildi)**
         CreateMap<Category, CategoryResponse>()
             .ForMember(dest => dest.ParentCategoryName, opt => opt.MapFrom(src => src.ParentCategory != null ? src.ParentCategory.Name : string.Empty))
             .ForMember(dest => dest.ProductCount, opt => opt.MapFrom(src => src.Products != null ? src.Products.Count : 0))
@@ -48,35 +48,39 @@ internal class MappingProfiles : Profile
             .MaxDepth(2)
             .PreserveReferences();
 
-        // ✅ Cart Mapping
+        // ✅ **Cart Mapping**
         CreateMap<Cart, CartResponse>()
             .ForMember(dest => dest.Items, opt => opt.MapFrom(src => src.Items ?? new List<CartItem>()))
             .ForMember(dest => dest.TotalAmount, opt => opt.MapFrom(src => src.Items != null ? src.Items.Sum(i => i.Quantity * i.UnitPrice) : 0));
 
-        // ✅ CartItem Mapping
+        // ✅ **CartItem Mapping**
         CreateMap<CartItem, CartItemResponse>()
-            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün"));
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün"))
+            .ForMember(dest => dest.SKU, opt => opt.MapFrom(src => src.Product != null ? src.Product.SKU : "N/A"))
+            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product != null && src.Product.Images.Any() ? src.Product.Images.FirstOrDefault().ImageUrl : string.Empty));
 
-        // ✅ Address Mapping
+        // ✅ **Address Mapping**
         CreateMap<Address, AddressResponse>();
         CreateMap<CreateAddressRequest, Address>();
         CreateMap<UpdateAddressRequest, Address>();
 
-        // ✅ Order Mapping
+        // ✅ **Order Mapping (🔥 Güncellendi!)**
         CreateMap<Order, OrderResponse>()
-            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src.User != null ? src.User : null)) // ✅ Kullanıcı bilgilerini ekledik
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User != null ? src.User.UserName : "Bilinmeyen Kullanıcı"))
             .ForMember(dest => dest.Payment, opt => opt.MapFrom(src => src.Payment))
             .ForMember(dest => dest.ShippingAddress, opt => opt.MapFrom(src => src.ShippingAddress))
             .ForMember(dest => dest.BillingAddress, opt => opt.MapFrom(src => src.BillingAddress))
             .ForMember(dest => dest.OrderItems, opt => opt.MapFrom(src => src.OrderItems ?? new List<OrderItem>()));
 
-        // ✅ Order Item Mapping
+        // ✅ **Order Item Mapping (🔥 Eksik Ürün Bilgileri Tamamlandı!)**
         CreateMap<OrderItem, OrderItemResponse>()
             .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product != null ? src.Product.Name : "Bilinmeyen Ürün"))
             .ForMember(dest => dest.SKU, opt => opt.MapFrom(src => src.Product != null ? src.Product.SKU : "N/A"))
-            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product != null && src.Product.Images.Any() ? src.Product.Images.FirstOrDefault().ImageUrl : string.Empty));
+            .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.Product != null && src.Product.Images.Any() ? src.Product.Images.FirstOrDefault().ImageUrl : string.Empty))
+            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.Quantity * src.UnitPrice)); // ✅ Toplam fiyat eklendi
 
-        // ✅ Payment Mapping
+        // ✅ **Payment Mapping**
         CreateMap<Payment, PaymentResponse>();
         CreateMap<PaymentRequest, Payment>();
     }

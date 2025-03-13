@@ -13,7 +13,7 @@ namespace WebApi.Controllers
     {
 
         [HttpPost("add")]
-        [MustHavePermission(AppFeature.Users, AppAction.Update)]
+        [MustHavePermission(AppFeature.Addresses, AppAction.Create)]
         public async Task<IActionResult> AddAddress([FromBody] CreateAddressRequest request)
         {
             var response = await MediatorSender.Send(new AddAddressCommand { Request = request });
@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut("update")]
-        [MustHavePermission(AppFeature.Users, AppAction.Update)]
+        [MustHavePermission(AppFeature.Addresses, AppAction.Update)]
         public async Task<IActionResult> UpdateAddress([FromBody] UpdateAddressRequest request)
         {
             var response = await MediatorSender.Send(new UpdateAddressCommand { Request = request });
@@ -29,7 +29,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete("remove/{addressId:int}")]
-        [MustHavePermission(AppFeature.Users, AppAction.Delete)]
+        [MustHavePermission(AppFeature.Addresses, AppAction.Delete)]
         public async Task<IActionResult> RemoveAddress(int addressId)
         {
             var response = await MediatorSender.Send(new RemoveAddressCommand { AddressId = addressId });
@@ -37,7 +37,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{addressId:int}")]
-        [MustHavePermission(AppFeature.Users, AppAction.Read)]
+        [MustHavePermission(AppFeature.Addresses, AppAction.Read)]
         public async Task<IActionResult> GetAddressById(int addressId)
         {
             var response = await MediatorSender.Send(new GetAddressByIdQuery { AddressId = addressId });
@@ -45,7 +45,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("user/{userId}")]
-        [MustHavePermission(AppFeature.Users, AppAction.Read)]
+        [MustHavePermission(AppFeature.Addresses, AppAction.Read)]
         public async Task<IActionResult> GetUserAddresses(string userId)
         {
             var response = await MediatorSender.Send(new GetUserAddressesQuery { UserId = userId });

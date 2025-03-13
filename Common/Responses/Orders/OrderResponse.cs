@@ -1,5 +1,4 @@
 ﻿using Common.Responses.Addresses;
-using Common.Responses.Identity;
 using Common.Responses.Payments;
 using Domain.Enums;
 
@@ -12,8 +11,9 @@ public record OrderResponse
     public decimal TotalAmount { get; init; }
     public OrderStatus Status { get; init; }
 
-    // Kullanıcı Bilgileri
-    public UserResponse User { get; init; } // ✅ Kullanıcı detaylarını içeren model
+    // Kullanıcı Bilgileri (Yalnızca ID ve Ad)
+    public string UserId { get; init; }
+    public string UserName { get; init; }
 
     // Ödeme Bilgileri
     public PaymentResponse? Payment { get; init; }

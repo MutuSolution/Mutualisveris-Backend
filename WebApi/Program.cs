@@ -28,6 +28,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddProductService();
 builder.Services.AddProductImageService();
 builder.Services.AddCategoryService();
+builder.Services.AddOrderService();
 builder.Services.AddCartService();
 builder.Services.AddAddressService();
 
