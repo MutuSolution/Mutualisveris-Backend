@@ -1,4 +1,4 @@
-﻿using Common.Request.Cart;
+﻿using Common.Requests.Cart;
 using Common.Responses.Cart;
 using Common.Responses.Wrappers;
 

@@ -1,4 +1,4 @@
-﻿namespace Common.Request.Identity;
+﻿namespace Common.Requests.Identity;
 
 public class ChangeUserPhoneRequest
 {

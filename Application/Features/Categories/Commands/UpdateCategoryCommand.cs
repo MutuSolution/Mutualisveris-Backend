@@ -1,7 +1,7 @@
 ﻿using Application.Pipelines;
 using Application.Services;
 using AutoMapper;
-using Common.Request.Category;
+using Common.Requests.Category;
 using Common.Responses.Wrappers;
 using MediatR;
 

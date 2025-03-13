@@ -1,6 +1,6 @@
 ﻿using Common.Requests.Payments;
 
-namespace Common.Request.Orders;
+namespace Common.Requests.Orders;
 public record CreateOrderRequest
 {
     public string UserId { get; init; } // 🔥 Kullanıcı kimliği (zorunlu)

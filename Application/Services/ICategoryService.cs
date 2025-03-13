@@ -1,4 +1,4 @@
-﻿using Common.Request.Category;
+﻿using Common.Requests.Category;
 using Common.Responses.Pagination;
 using Common.Responses.Wrappers;
 using Domain.Responses;

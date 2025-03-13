@@ -1,6 +1,6 @@
 ﻿using Application.Pipelines;
 using Application.Services;
-using Common.Request.Category;
+using Common.Requests.Category;
 using Common.Responses.Wrappers;
 using MediatR;
 

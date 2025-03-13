@@ -1,4 +1,4 @@
-﻿using Common.Request.Cart;
+﻿using Common.Requests.Cart;
 using FluentValidation;
 
 namespace Application.Features.Cart.Validators.AddToCart;

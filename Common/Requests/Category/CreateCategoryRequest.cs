@@ -1,4 +1,4 @@
-﻿namespace Common.Request.Category;
+﻿namespace Common.Requests.Category;
 
 public record CreateCategoryRequest
 {

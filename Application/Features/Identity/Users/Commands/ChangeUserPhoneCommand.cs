@@ -1,5 +1,5 @@
 ﻿using Application.Services.Identity;
-using Common.Request.Identity;
+using Common.Requests.Identity;
 using Common.Responses.Wrappers;
 using MediatR;
 

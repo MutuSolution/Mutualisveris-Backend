@@ -1,7 +1,6 @@
 ﻿using Application.Features.Identity.Users.Commands;
 using Application.Features.Identity.Users.Queries;
 using Common.Authorization;
-using Common.Request.Identity;
 using Common.Requests.Identity;
 using Common.Responses.Pagination;
 using Microsoft.AspNetCore.Authorization;

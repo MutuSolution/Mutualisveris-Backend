@@ -1,4 +1,4 @@
-﻿using Common.Request.Category;
+﻿using Common.Requests.Category;
 using FluentValidation;
 
 namespace Application.Features.Categories.Validators;

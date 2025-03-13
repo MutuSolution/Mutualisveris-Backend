@@ -1,4 +1,4 @@
-﻿namespace Common.Request.Cart
+﻿namespace Common.Requests.Cart
 {
     public record RemoveFromCartRequest
     {

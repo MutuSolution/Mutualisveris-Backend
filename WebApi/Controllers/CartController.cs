@@ -1,6 +1,6 @@
 ﻿using Application.Features.Cart.Commands;
 using Application.Features.Cart.Queries;
-using Common.Request.Cart;
+using Common.Requests.Cart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

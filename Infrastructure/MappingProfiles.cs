@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Common.Request.Category;
 using Common.Requests.Addresses;
+using Common.Requests.Category;
 using Common.Requests.Payments;
 using Common.Requests.Products;
 using Common.Responses.Addresses;
