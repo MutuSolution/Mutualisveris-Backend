@@ -95,6 +95,7 @@ public sealed class ProductService : IProductService
             var searchTerm = parameters.SearchTerm.ToLower();
             query = query.Where(x =>
                 x.Name.ToLower().Contains(searchTerm) ||
+                x.Category.Name.ToLower().Contains(searchTerm) ||
                 x.Description.ToLower().Contains(searchTerm));
         }
 

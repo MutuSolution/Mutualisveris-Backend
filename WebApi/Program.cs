@@ -85,7 +85,10 @@ else // Production Ayarlarý
         "https://mutualisveris.com",
         "https://api.mutualisveris.com",
         "http://localhost:3000",
-        "https://localhost:3000"
+        "https://localhost:3000",
+        "https://mutu-fr-ahmetanil1s-projects.vercel.app",
+        "https://mutu-ev1aaqoep-ahmetanil1s-projects.vercel.app/",
+        "https://mutu-fr-ahmetanil1s-projects.vercel.app/"
         )
         .AllowAnyMethod()
         .AllowAnyHeader()
