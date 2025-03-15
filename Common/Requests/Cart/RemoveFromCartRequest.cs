@@ -1,8 +1,6 @@
-﻿namespace Common.Requests.Cart
+﻿namespace Common.Requests.Cart;
+public record RemoveFromCartRequest
 {
-    public record RemoveFromCartRequest
-    {
-        public string UserId { get; init; }
-        public int ProductId { get; init; }
-    }
+    public string UserId { get; init; }
+    public int ProductId { get; init; }
 }

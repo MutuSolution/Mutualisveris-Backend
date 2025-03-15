@@ -129,13 +129,19 @@ public class CartService : ICartService
             if (cart == null)
                 return ResponseWrapper<CartResponse>.Fail("Sepet bulunamadı.");
 
+            // 🔥 Eğer null ise, boş liste olarak ata
+            cart.Items ??= new List<CartItem>();
+
             var cartItem = cart.Items.FirstOrDefault(i => i.ProductId == request.ProductId);
             if (cartItem == null)
                 return ResponseWrapper<CartResponse>.Fail("Ürün sepette bulunamadı.");
 
+            cart.Items.Remove(cartItem);
+
+            // 🔥 Sepette hiç ürün kalmadıysa (ve sistemde boş sepet tutulmuyorsa), sepeti de sil
             if (!cart.Items.Any())
             {
-                _context.Carts.Remove(cart); // 🔥 Eğer sistemde boş sepet tutulmayacaksa tamamen silinebilir
+                _context.Carts.Remove(cart);
             }
 
             await _context.SaveChangesAsync();
@@ -146,6 +152,7 @@ public class CartService : ICartService
             return ResponseWrapper<CartResponse>.Fail($"Hata: {ex.Message}");
         }
     }
+
 
     public async Task<IResponseWrapper<CartResponse>> GetCartAsync(string userId)
     {
